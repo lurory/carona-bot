@@ -13,19 +13,11 @@ else {
 
 console.log('Bot server started in the ' + process.env.NODE_ENV + ' mode');
 
-bot.on('inline_query', (msg) => {
-  const query = msg.query;
-  let resultValue = limitedEval(query)
-  const results = [
-    {
-      type: 'article',
-      id: '0',
-      title: 'Inline Calculator Bot',
-      description: query,
-      input_message_content: {message_text: query + ' = ' + resultValue}
-    }
-  ]
-  bot.answerInlineQuery(msg.id, JSON.stringify(results)).then(() => {});
+bot.on('message', (msg) => {
+  const chatId = msg.chat.id;
+
+  // send a message to the chat acknowledging receipt of their message
+  bot.sendMessage(chatId, 'Received your message');
 });
 
 module.exports = bot;
