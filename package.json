@@ -1,0 +1,20 @@
+{
+  "name": "carona-bot",
+  "version": "1.0.0",
+  "description": "Telegram bot for sharing rides.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js",
+    "switch_to_dev": "export $(cat .env | xargs) && wget --spider https://api.telegram.org/bot$TOKEN/setWebhook?url= --delete-after && node index.js"
+  },
+  "author": "Fabiana Ferreira, Lucas Cerqueira",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.15.0",
+    "dotenv": "^4.0.0",
+    "express": "^4.13.4",
+    "mathjs": "^5.4.1",
+    "node-telegram-bot-api": "^0.30.0"
+  }
+}
