@@ -1,8 +1,7 @@
 class Carona 
 {
-	constructor (chatId, user, time, description)
+	constructor (user, time, description)
 	{
-        this.chatId = chatId;
 		this.user = user;
 		this.time = time;
 		this.description = description;
