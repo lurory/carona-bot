@@ -116,7 +116,7 @@ bot.on('text', (msg) => {
       // Clean old rides
       rideManager.clean(chatId);
 
-      
+
       bot.sendMessage(chatId, 'Lista');
       break;
 

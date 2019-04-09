@@ -41,9 +41,7 @@ class RideManager
 			'description': description
 		};
 
-		fs.writeFile(this.filepath, JSON.stringify(this.rides), function (err) {
-			if (err)  console.log(err);
-		});
+		this.updateFile();
 
 		// console.log(JSON.stringify(this.rides, null, 2));
 		// console.log(isEdit);
@@ -60,9 +58,7 @@ class RideManager
 
 		delete this.rides[chatId][direction][userId];
 
-		fs.writeFile(this.filepath, JSON.stringify(this.rides), function (err) {
-			if (err)  console.log(err);
-		});
+		this.updateFile();
 
 		// console.log(JSON.stringify(this.rides, null, 2))
 
@@ -81,13 +77,24 @@ class RideManager
 
 		let now = new Date().toLocaleString("pt-BR", {"timeZone": "America/Sao_Paulo"});
 		now = new Date(now);
+		let removed = false;
 		for (const direction of Object.keys(this.rides[chatId]))
 			for (const [userId, ride] of Object.entries(this.rides[chatId][direction]))
 				if (new Date(ride.time) < now)
 				{
 					// console.log('Removing ride of ' + ride.user.first_name + ' at ' + ride.time)
-					this.removeRide(chatId, userId, direction);
+					removed = true;
+					delete this.rides[chatId][direction][userId];
 				}
+		if (removed == true)
+			this.updateFile();
+	}
+
+	updateFile()
+	{
+		fs.writeFile(this.filepath, JSON.stringify(this.rides), function (err) {
+			if (err)  console.log(err);
+		});
 	}
 };
 
