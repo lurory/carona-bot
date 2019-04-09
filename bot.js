@@ -1,9 +1,9 @@
 const token = process.env.TOKEN;
 
 const Bot = require('node-telegram-bot-api');
-const fs = require('fs')
+// const fs = require('fs')
 
-const Carona = require('./carona.js');
+const RideManager = require('./rideManager.js');
 
 let bot;
 
@@ -17,21 +17,23 @@ else {
 
 console.log('Bot server started in the ' + process.env.NODE_ENV + ' mode');
 
-var rides;
+// var rides;
 
-fs.readFile('rides.json', (err, data) => {  
-  if (err) 
-  {
-    if (err.code === 'ENOENT') // File does not exist
-    {
-      rides = {}
-      return;
-    }
-    throw err;
-  }
-  rides = JSON.parse(data);
-  console.log(rides);
-});
+// fs.readFile('rides.json', (err, data) => {  
+//   if (err) 
+//   {
+//     if (err.code === 'ENOENT') // File does not exist
+//     {
+//       rides = {}
+//       return;
+//     }
+//     throw err;
+//   }
+//   rides = JSON.parse(data);
+//   console.log(rides);
+// });
+
+rideManager = new RideManager('rides.json');
 
 bot.on('text', (msg) => {
   const chatId = msg.chat.id;
@@ -82,6 +84,9 @@ bot.on('text', (msg) => {
         return;
       }
 
+      // Clean old rides
+      rideManager.clean(chatId);
+
       // Setting date according to the ride time
       time = new Date().toLocaleString("pt-BR", {"timeZone": "America/Sao_Paulo"});
       time = new Date(time);
@@ -93,35 +98,25 @@ bot.on('text', (msg) => {
       // If it is for tomorrow, add one day to the date
       if (!isToday)
         time.setDate(time.getDate() + 1);
+        
 
-      // var carona = new Carona (user, time, description);
-
-      bot.sendMessage(chatId, 'Ida ' + time.getHours() + ':' + ("0" + time.getMinutes()).slice(-2) +  ' - ' + description);
-
-      console.log(time.toString());
-
-      if (!rides.hasOwnProperty(chatId))
-      {
-        rides[chatId] = {};
-        rides[chatId]['going'] = {};
-        rides[chatId]['coming'] = {};
-      }
-
-      rides[chatId][command === '/ida' ? 'going' : 'coming'][user.id] = {
-        'user': user,
-        'time': time,
-        'description': description
-      };
-
-      fs.writeFile('rides.json', JSON.stringify(rides), function (err) {
-        if (err)  console.log(err);
-      });
-
-      console.log(JSON.stringify(rides, null, 2))
+      let isEdit = rideManager.addRide(chatId, user, time, description, 
+                                       command === '/ida' ? 'going' : 'coming');
+      
+      if (isEdit == true)
+        bot.sendMessage(chatId, 'Sua ' + command.slice(1) + ' foi atualizada.', 
+                        {'reply_to_message_id': msg.message_id});
+      else
+        bot.sendMessage(chatId, 'Sua ' + command.slice(1) + ' foi adicionada com sucesso.', 
+                        {'reply_to_message_id': msg.message_id});
 
       break;
       
     case '/lista':
+      // Clean old rides
+      rideManager.clean(chatId);
+
+      
       bot.sendMessage(chatId, 'Lista');
       break;
 
@@ -132,15 +127,19 @@ bot.on('text', (msg) => {
         return;
       }
 
-      delete rides[chatId][fields[1] === 'ida' ? 'going' : 'coming'][user.id];
-
-      fs.writeFile('rides.json', JSON.stringify(rides), function (err) {
-        if (err)  console.log(err);
-      });
-
-      console.log(JSON.stringify(rides, null, 2))
-
+      if (rideManager.removeRide(chatId, user.id, fields[1] === 'ida' ? 'going' : 'coming'))
+        bot.sendMessage(chatId, 'Sua ' + fields[1] + ' foi removida.',
+                        {'reply_to_message_id': msg.message_id});
+      else
+        bot.sendMessage(chatId, 
+                        user.first_name + ', você não possui uma ' + fields[1] + ' cadastrada.',
+                        {'reply_to_message_id': msg.message_id});
+      
       break;
+
+    case '/limpar':
+      rideManager.clean(chatId);
+    break;
 
     default:
       bot.sendMessage(chatId, 'Comando desconhecido');
@@ -148,6 +147,10 @@ bot.on('text', (msg) => {
 
   // send a message to the chat acknowledging receipt of their message
   // bot.sendMessage(chatId, 'Received your message');
+});
+
+bot.on('polling_error', (error) => {
+  console.log(error.code);  // => 'EFATAL'
 });
 
 module.exports = bot;
