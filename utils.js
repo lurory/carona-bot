@@ -1,13 +1,17 @@
+// Function to return the strikethrough version
+// of a giver string.
 function strikeThrough (text) {
     return text.split('').map(char => char + '\u0336').join('')
 }
 
+// Function to zero pad hour or minute strings
 function addZeroPadding (time) {
     if (time < 10)
         return "0" + time
     return time
 }
 
+// Easter-egg function to return special emojis for some users
 function getUserEmoji (user) {
     if (user.username === "Mateus_Street")
         return "\u{1F697}"
@@ -18,6 +22,7 @@ function getUserEmoji (user) {
     return ""
 }
 
+// Easter-egg function to return emojis for special dates
 function getSpecialDayEmoji (day, month) {
     //Christmas
     if (month == 12)
@@ -37,9 +42,21 @@ function getSpecialDayEmoji (day, month) {
     return ""
 }
 
+function getHelpMessage(){
+    return "Olá! Sou o Carona Bot v2.0!\n" + 
+    "/ida [[horário]] [[descrição]] - Adiciona sua ida para o horário especificado. Ex: /ida 7:30 Vila da Penha\n" +
+    "/volta [[horário]] [[descrição]] - Adiciona sua volta para o horário especificado. Ex: /ida 17 Largo do Bicão\n" +
+    "/remover ida/volta - Remove sua ida ou volta, dependendo da opção escolhida. Ex: /remover ida\n" +
+    "/lista - Lista as caronas registradas.\n" +
+    "/lotou ida/volta - Marca a sua carona de ida ou volta como lotada, dependendo da opção escolhida. Ex: /lotou volta\n" +
+    "/vagou ida/volta - Marca a sua carona de ida ou volta como disponível, dependendo da opção escolhida. Ex: /vagou ida\n" +
+    "/help ou /ajuda - Exibe essa mensagem.\n"
+}
+
 module.exports = {
     strikeThrough,
     addZeroPadding,
     getUserEmoji,
-    getSpecialDayEmoji
+    getSpecialDayEmoji,
+    getHelpMessage
 }

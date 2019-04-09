@@ -1,5 +1,5 @@
 const Const = require('./const.js')
-let Utils = require("./utils.js")
+const Utils = require("./utils.js")
 
 const fs = require('fs')
 
@@ -23,9 +23,8 @@ class RideManager {
 		})
 	}
 
-	// addRide = (chatId, user, time, description, direction) => {
-
-	// }
+	// Add/edit a ride and save to the file. Returns `true`
+	// if the ride was edited and `false` if it was created.
 	addRide(chatId, user, time, description, direction) {
 		let isEdit = false
 		if (!this.rides.hasOwnProperty(chatId)) {
@@ -45,15 +44,11 @@ class RideManager {
 		}
 
 		this.updateFile()
-
-		console.log(JSON.stringify(this.rides, null, 2))
-		// console.log(isEdit)
-
 		return isEdit
-
-
 	}
 
+	// Remove a ride and update the file. Returns `false` if there 
+	// isn't such a ride to be removed.
 	removeRide(chatId, userId, direction) {
 		if (!this.rides[chatId][direction].hasOwnProperty(userId))
 			return false
@@ -61,12 +56,11 @@ class RideManager {
 		delete this.rides[chatId][direction][userId]
 
 		this.updateFile()
-
-		// console.log(JSON.stringify(this.rides, null, 2))
-
 		return true
 	}
 
+	// Set ride full (`state` = 1) or empty (`state` = 0)
+	// and update the file.
 	setRideFull(chatId, userId, direction, state) {
 		if (!this.rides[chatId][direction].hasOwnProperty(userId))
 			return false
@@ -76,6 +70,7 @@ class RideManager {
 		return true
 	}
 
+	// Clean past rides and update the file.
 	clean(chatId) {
 		if (!this.rides.hasOwnProperty(chatId)) {
 			this.rides[chatId] = {}
@@ -98,25 +93,30 @@ class RideManager {
 			this.updateFile()
 	}
 
+	// Function to update the file with the `rides` attribute content.
 	updateFile() {
 		fs.writeFile(this.filepath, JSON.stringify(this.rides), function (err) {
 			if (err) console.log(err)
 		})
 	}
 
+	// Returns a string ready to be sent to the users
+	// with all the rides information.
 	listRidesAsString(chatId) {
 		let totalRides = []
 		let message
 
+		// No rides
 		if (!this.rides.hasOwnProperty(chatId))
 			return ""
 
+		// Concatenate rides arrays to a single array
 		Object.entries(this.rides[chatId]).forEach(element => {
 			const rides = Object.values(element[1])
 			totalRides = totalRides.concat(rides)
 		})
 
-		//Sorting by date
+		//Sorting by day/month - direction - time
 		totalRides.sort((a, b) => {
 			let dateA = new Date(a.time)
 			let dateB = new Date(b.time)
@@ -130,12 +130,15 @@ class RideManager {
 				(timeA).localeCompare(timeB)
 		})
 
+		// Auxiliary variables
 		message = ""
 		let date, hours, minutes, day, month, weekday
 		let previousDirection, previousDate
 		let rideInfo
 		let changedDate = false
 
+		// Assemble the message while iterating over the
+		// rides array
 		totalRides.forEach(ride => {
 			date = new Date(ride.time)
 			hours = date.getHours()
@@ -144,8 +147,9 @@ class RideManager {
 			month = date.getMonth() + 1
 			weekday = Const.weekdays.pt_br[date.getDay()]
 
+			// Check if day/month changed to print a new line
 			if (!previousDate || previousDate != date.toDateString()) {
-				changedDate = true
+				// changedDate = true
 				if (previousDate)
 					message += "\n"
 				message += Utils.getSpecialDayEmoji(day, month) + "*" + (day < 10 ? "0" + day : day)
@@ -155,26 +159,30 @@ class RideManager {
 					+ "\n"
 			}
 
+			// Check if direction changed to print a new line and the new direction
 			if (!previousDirection || previousDirection != ride.direction) {
-				if (changedDate === true) {
-					message += '\n'
-					changedDate = false
-				}
-				else
-					message += '\n'
-
+				// if (changedDate === true) {
+				// 	message += '\n'
+				// 	changedDate = false
+				// }
+				// else
+				// 	message += '\n'
+				message += '\n'
 				message += (ride.direction === "going") ? "*IDA*\n" : "*VOLTA*\n"
 			}
 
+			// Ride info (time and description)
 			rideInfo = " - " + (hours < 10 ? "0" + hours : hours) + ":"
 				+ (minutes != 0 ? minutes : '00') + " - "
 				+ ride.description
 
+			// If it is full, generate strikethrough text.
 			if (ride.full === 1) {
 				rideInfo = ride.user.first_name + " " + ride.user.last_name
 					+ rideInfo
 				message += Utils.strikeThrough(rideInfo) + "\n"
 			}
+			// If it is not, create a link for the user.
 			else {
 				rideInfo = (Utils.getUserEmoji(ride.user)) + " "
 					+ "[" + ride.user.first_name + " " + ride.user.last_name + "]"
@@ -187,6 +195,7 @@ class RideManager {
 			previousDate = date.toDateString()
 		})
 
+		// Return the full message.
 		return message
 	}
 }

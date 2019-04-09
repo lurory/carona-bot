@@ -1,3 +1,4 @@
+// Weekdays names
 const weekdays = 
 {
     pt_br: [
@@ -20,6 +21,7 @@ const weekdays =
     ]
 }
 
+// Emojis for each weekday
 const emojis = [
     "\u{1F62B}",
     "\u{1F62D}",

@@ -3,6 +3,7 @@ const token = process.env.TOKEN
 const Bot = require('node-telegram-bot-api')
 
 const RideManager = require('./rideManager.js')
+const Utils = require("./utils.js")
 
 let bot
 
@@ -140,6 +141,13 @@ bot.on('text', (msg) => {
       rideManager.clean(chatId)
       break
 
+    case '/help':
+    case '/ajuda':
+      bot.sendMessage(chatId, Utils.getHelpMessage(), {
+        'parse_mode': 'Markdown'
+      })
+      break
+    
     default:
       bot.sendMessage(chatId, 'Comando desconhecido')
   }
