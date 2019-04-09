@@ -20,6 +20,8 @@ bot.on('text', (msg) => {
   const fields = msg.text.split(' ');
   command = fields[0];
 
+  bot.sendMessage(chatId, 'Received message: ' + msg.text);
+
   switch(command) {
     case '/ida':
       // Message format:
@@ -29,7 +31,10 @@ bot.on('text', (msg) => {
       // pode criar pro dia seguinte, e se tem, é porque nao passou do horario, pq
       // nao foi deletada pelo programa
       if (fields.length < 3)
+      {
         bot.sendMessage(chatId, '/ida [hoje?] [horário] [descrição]');
+        return;
+      }
 
       let isToday = false;
       let time;
@@ -53,7 +58,6 @@ bot.on('text', (msg) => {
       if (fields.length < 3)
         bot.sendMessage(chatId, '/volta [horário] [descrição]');
 
-      
       bot.sendMessage(chatId, 'Volta');
       break;
     case '/lista':
