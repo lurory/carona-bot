@@ -20,6 +20,9 @@ console.log('Bot server started in the ' + process.env.NODE_ENV + ' mode')
 rideManager = new RideManager('rides.json')
 
 bot.on('text', (msg) => {
+  if (msg.text[0] != "/")
+    return
+
   const chatId = msg.chat.id
   const user = msg.from
 
