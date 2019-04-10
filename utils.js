@@ -45,14 +45,15 @@ function getSpecialDayEmoji(day, month) {
 }
 
 function getHelpMessage() {
-    return "Olá! Sou o Carona Bot v2.0!\n" +
-        "/ida [[horário]] [[descrição]] - Adiciona sua ida para o horário especificado. Ex: /ida 7:30 Vila da Penha\n" +
-        "/volta [[horário]] [[descrição]] - Adiciona sua volta para o horário especificado. Ex: /ida 17 Largo do Bicão\n" +
-        "/remover ida/volta - Remove sua ida ou volta, dependendo da opção escolhida. Ex: /remover ida\n" +
+    return "Olá! Sou o Carona Bot v2.0!\n\n" +
         "/lista - Lista as caronas registradas.\n" +
-        "/lotou ida/volta - Marca a sua carona de ida ou volta como lotada, dependendo da opção escolhida. Ex: /lotou volta\n" +
-        "/vagou ida/volta - Marca a sua carona de ida ou volta como disponível, dependendo da opção escolhida. Ex: /vagou ida\n" +
-        "/help ou /ajuda - Exibe essa mensagem.\n"
+        "/ida *[horário] [descrição]* - Adiciona sua ida para o horário especificado. *Ex: /ida 7:30 Vila da Penha*\n" +
+        "/volta *[horário] [descrição]* - Adiciona sua volta para o horário especificado. *Ex: /ida 17 Largo do Bicão*\n" +
+        "/remover *ida*/*volta* - Remove sua ida ou volta, dependendo da opção escolhida. *Ex: /remover ida*\n" +
+        "/lotou *ida*/*volta* - Marca a sua carona de ida ou volta como lotada, dependendo da opção escolhida. *Ex: /lotou volta*\n" +
+        "/vagou *ida*/*volta* - Marca a sua carona de ida ou volta como disponível, dependendo da opção escolhida. *Ex: /vagou ida*\n" +
+        "/help ou /ajuda - Exibe essa mensagem.\n\n" + 
+        "Criado por [Fabiana Ferreira](tg://user?id=173433762) e [Lucas Cerqueira](tg://user?id=146544127)."
 }
 
 module.exports = {
