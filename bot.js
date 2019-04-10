@@ -29,8 +29,6 @@ bot.on('text', (msg) => {
   if (command.indexOf('@carona_v2_bot') > -1)
     command = command.split('@')[0]
 
-  let today
-
   switch (command) {
     case '/ida':
     case '/volta':
@@ -101,6 +99,10 @@ bot.on('text', (msg) => {
 
     case '/lotou':
     case '/vagou':
+      if (fields.length < 2 || (fields[1] != "ida" && fields[1] != "volta")) {
+        bot.sendMessage(chatId, command + ' ida/volta')
+        return
+      }
       let success = rideManager.setRideFull(chatId, user.id,
         fields[1] === 'ida' ? 'going' : 'coming',
         command === '/lotou' | 0)
@@ -150,7 +152,7 @@ bot.on('text', (msg) => {
         'parse_mode': 'Markdown'
       })
       break
-    
+
     default:
       bot.sendMessage(chatId, 'Comando desconhecido')
   }

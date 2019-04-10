@@ -52,7 +52,7 @@ function getHelpMessage() {
         "/remover *ida*/*volta* - Remove sua ida ou volta, dependendo da opção escolhida. *Ex: /remover ida*\n" +
         "/lotou *ida*/*volta* - Marca a sua carona de ida ou volta como lotada, dependendo da opção escolhida. *Ex: /lotou volta*\n" +
         "/vagou *ida*/*volta* - Marca a sua carona de ida ou volta como disponível, dependendo da opção escolhida. *Ex: /vagou ida*\n" +
-        "/help ou /ajuda - Exibe essa mensagem.\n\n" + 
+        "/help ou /ajuda - Exibe essa mensagem.\n\n" +
         "Criado por [Fabiana Ferreira](tg://user?id=173433762) e [Lucas Cerqueira](tg://user?id=146544127)."
 }
 

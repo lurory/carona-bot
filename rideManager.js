@@ -121,9 +121,9 @@ class RideManager {
 			let dateA = new Date(a.time)
 			let dateB = new Date(b.time)
 			let timeA = Utils.addZeroPadding(dateA.getHours())
-						+ ":" + Utils.addZeroPadding(dateA.getMinutes())
+				+ ":" + Utils.addZeroPadding(dateA.getMinutes())
 			let timeB = Utils.addZeroPadding(dateB.getHours())
-						+ ":" + Utils.addZeroPadding(dateB.getMinutes())
+				+ ":" + Utils.addZeroPadding(dateB.getMinutes())
 
 			return (dateA.toDateString()).localeCompare(dateB.toDateString()) ||
 				(b.direction).localeCompare(a.direction) ||
@@ -161,12 +161,6 @@ class RideManager {
 
 			// Check if direction changed to print a new line and the new direction
 			if (!previousDirection || previousDirection != ride.direction) {
-				// if (changedDate === true) {
-				// 	message += '\n'
-				// 	changedDate = false
-				// }
-				// else
-				// 	message += '\n'
 				message += '\n'
 				message += (ride.direction === "going") ? "*IDA*\n" : "*VOLTA*\n"
 			}
@@ -178,14 +172,15 @@ class RideManager {
 
 			// If it is full, generate strikethrough text.
 			if (ride.full === 1) {
-				rideInfo = ride.user.first_name + " " + ride.user.last_name
+				rideInfo = ride.user.first_name + " "
+					+ (ride.user.last_name || "")
 					+ rideInfo
 				message += Utils.strikeThrough(rideInfo) + "\n"
 			}
 			// If it is not, create a link for the user.
 			else {
 				rideInfo = (Utils.getUserEmoji(ride.user)) + " "
-					+ "[" + ride.user.first_name + " " + ride.user.last_name + "]"
+					+ "[" + ride.user.first_name + " " + (ride.user.last_name || "") + "]"
 					+ "(tg://user?id=" + ride.user.id + ")"
 					+ rideInfo
 				message += rideInfo + "\n"
