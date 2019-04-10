@@ -162,6 +162,7 @@ bot.on('text', (msg) => {
 })
 
 bot.on('polling_error', (error) => {
+  console.log(error)
   console.log(error.code)  // => 'EFATAL'
 })
 

@@ -2,25 +2,30 @@ const Const = require('./const.js')
 const Utils = require("./utils.js")
 
 const fs = require('fs')
+const MongoClient = require('mongodb').MongoClient
 
 class RideManager {
 	constructor(filepath) {
 		this.filepath = filepath
+		this.client = new MongoClient(Const.MONGO_URL, { useNewUrlParser: true });
 
-		this.rides
-
-		fs.readFile(this.filepath, (err, data) => {
-			if (err) {
-				if (err.code === 'ENOENT') // File does not exist
-				{
-					this.rides = {}
-					return
+		this.rides = {}
+		
+		MongoClient.connect(Const.MONGO_URL, { useNewUrlParser: true }, (err, client) => {
+			if (err) throw err;
+			const collection = client.db("storage").collection("carona-bot");
+			// this.collection.insertOne(entry, (err, result) => {
+			// 	if (err) console.log(err)
+			// })
+			collection.find({}, { '_id': 0 }).toArray((err, result) => {
+				if (err) throw err
+				for (const entry of result) {
+					delete entry['_id']
+					this.rides[entry['chatId']] = entry
 				}
-				throw err
-			}
-			this.rides = JSON.parse(data)
-			console.log(JSON.stringify(this.rides, null, 2))
-		})
+			})
+			client.close();
+		});
 	}
 
 	// Add/edit a ride and save to the file. Returns `true`
@@ -32,6 +37,8 @@ class RideManager {
 			this.rides[chatId]['going'] = {}
 			this.rides[chatId]['coming'] = {}
 		}
+		else if (!this.rides[chatId][direction])
+			this.rides[chatId][direction] = {}
 		else if (this.rides[chatId][direction].hasOwnProperty(user.id))
 			isEdit = true
 
@@ -43,7 +50,7 @@ class RideManager {
 			'full': 0
 		}
 
-		this.updateFile()
+		this.updateMongo(chatId, user.id, direction)
 		return isEdit
 	}
 
@@ -55,18 +62,21 @@ class RideManager {
 
 		delete this.rides[chatId][direction][userId]
 
-		this.updateFile()
+		this.updateMongo(chatId, userId, direction)
 		return true
 	}
 
 	// Set ride full (`state` = 1) or empty (`state` = 0)
 	// and update the file.
 	setRideFull(chatId, userId, direction, state) {
-		if (!this.rides[chatId][direction].hasOwnProperty(userId))
+		if (!this.rides[chatId] || !this.rides[chatId][direction] ||
+			!this.rides[chatId][direction].hasOwnProperty(userId))
 			return false
 
 		this.rides[chatId][direction][userId].full = state
-		this.updateFile()
+
+		this.updateMongo(chatId, userId, direction)
+
 		return true
 	}
 
@@ -82,21 +92,66 @@ class RideManager {
 		let now = new Date().toLocaleString("pt-BR", { "timeZone": "America/Sao_Paulo" })
 		now = new Date(now)
 		let removed = false
+		let removedRides = {}
 		for (const direction of Object.keys(this.rides[chatId]))
 			for (const [userId, ride] of Object.entries(this.rides[chatId][direction]))
 				if (new Date(ride.time) < now) {
 					removed = true
 					delete this.rides[chatId][direction][userId]
+					removedRides[direction + '.' + userId] = ""
 				}
-		if (removed == true)
-			this.updateFile()
+		if (removed == true) {
+			this.updateMongoWithQuery(chatId, {
+				$unset: removedRides
+			})
+		}
 	}
 
-	// Function to update the file with the `rides` attribute content.
-	updateFile() {
-		fs.writeFile(this.filepath, JSON.stringify(this.rides), function (err) {
-			if (err) console.log(err)
-		})
+	// Function to update the MongoDB using a query
+	updateMongoWithQuery(chatId, query) {
+		MongoClient.connect(Const.MONGO_URL, { useNewUrlParser: true }, (err, client) => {
+			if (err) throw err;
+			const collection = client.db("storage").collection("carona-bot");
+
+			collection.updateOne({ 'chatId': chatId }, query,
+				{ 'upsert': true }, (error, res) => {
+					if (error) throw error;
+					console.log(res.modifiedCount + " element(s) modified.");
+				})
+
+			client.close();
+		});
+	}
+
+	// Function to update a ride of a specific user
+	updateMongo(chatId, userId, direction) {
+		MongoClient.connect(Const.MONGO_URL, { useNewUrlParser: true }, (err, client) => {
+			if (err) throw err;
+			const collection = client.db("storage").collection("carona-bot");
+
+			let updateQuery
+			let key = direction + '.' + userId
+			if (this.rides[chatId][direction][userId])
+				updateQuery = {
+					$set: {
+						[key]: this.rides[chatId][direction][userId],
+					}
+				}
+			else
+				updateQuery = {
+					$unset: {
+						[key]: "",
+					}
+				}
+
+			collection.updateOne({ 'chatId': chatId }, updateQuery,
+				{ 'upsert': true }, (error, res) => {
+					if (error) throw error;
+					console.log(res.modifiedCount + " element(s) modified.");
+				})
+
+			client.close();
+		});
 	}
 
 	// Returns a string ready to be sent to the users
@@ -123,8 +178,12 @@ class RideManager {
 				+ ":" + Utils.addZeroPadding(dateA.getMinutes())
 			let timeB = Utils.addZeroPadding(dateB.getHours())
 				+ ":" + Utils.addZeroPadding(dateB.getMinutes())
+			let dayMonthA = Utils.addZeroPadding(dateA.getDate())
+				+ "/" + Utils.addZeroPadding(dateA.getMonth())
+			let dayMonthB = Utils.addZeroPadding(dateB.getDate())
+				+ "/" + Utils.addZeroPadding(dateB.getMonth())
 
-			return (dateA.toDateString()).localeCompare(dateB.toDateString()) ||
+			return dayMonthA.localeCompare(dayMonthB) ||
 				(b.direction).localeCompare(a.direction) ||
 				(timeA).localeCompare(timeB)
 		})
@@ -147,7 +206,7 @@ class RideManager {
 			weekday = Const.weekdays.pt_br[date.getDay()]
 
 			// Check if day/month changed to print a new line
-			if (!previousDate || previousDate != date.toDateString()) {
+			if (!previousDate || previousDate !== date.toDateString()) {
 				// changedDate = true
 				if (previousDate)
 					message += "\n"
@@ -159,14 +218,14 @@ class RideManager {
 			}
 
 			// Check if direction changed to print a new line and the new direction
-			if (!previousDirection || previousDirection != ride.direction) {
+			if (!previousDirection || previousDirection !== ride.direction) {
 				message += '\n'
 				message += (ride.direction === "going") ? "*IDA*\n" : "*VOLTA*\n"
 			}
 
 			// Ride info (time and description)
 			rideInfo = " - " + (hours < 10 ? "0" + hours : hours) + ":"
-				+ (minutes != 0 ? minutes : '00') + " - "
+				+ (minutes !== 0 ? minutes : '00') + " - "
 				+ ride.description
 
 			// If it is full, generate strikethrough text.

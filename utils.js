@@ -27,7 +27,7 @@ function getUserEmoji(user) {
 // Easter-egg function to return emojis for special dates
 function getSpecialDayEmoji(day, month) {
     //Easter
-    if (month === 4 && (day === 17 || day === 18 || day == 19 || day == 20 || day == 21))
+    if (month === 4 && (day === 17 || day === 18 || day === 19 || day === 20 || day === 21))
         return "\u{1F430}"
     //Christmas
     if (month === 12) {
