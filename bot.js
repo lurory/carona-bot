@@ -26,6 +26,9 @@ bot.on('text', (msg) => {
   const fields = msg.text.split(' ')
   command = fields[0]
 
+  if (command.indexOf('@carona_v2_bot') > -1)
+    command = command.split('@')[0]
+
   let today
 
   switch (command) {
