@@ -55,7 +55,7 @@ bot.on('text', (msg) => {
       // Validating time format
       matches = timePattern.exec(time)
       if (!matches) {
-        bot.sendMessage(chatId, 'Horário no formato inválido')
+        bot.sendMessage(chatId, 'Horário no formato inválido.')
         return
       }
 
@@ -83,8 +83,8 @@ bot.on('text', (msg) => {
       let isEdit = rideManager.addRide(chatId, user, time, description,
         command === '/ida' ? 'going' : 'coming')
 
-      if (isEdit == true)
-        bot.sendMessage(chatId, '`Sua ' + command.slice(1) + ' foi atualizada.`',
+      if (isEdit === true)
+        bot.sendMessage(chatId, 'Sua ' + command.slice(1) + ' foi atualizada.',
           {
             'reply_to_message_id': msg.message_id,
             'parse_mode': 'Markdown'
@@ -154,7 +154,7 @@ bot.on('text', (msg) => {
       break
 
     default:
-      bot.sendMessage(chatId, 'Comando desconhecido')
+      bot.sendMessage(chatId, 'Desculpe, não entendi. Digite /ajuda para ver a lista de comandos.')
   }
 })
 

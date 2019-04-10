@@ -16,9 +16,11 @@ function getUserEmoji(user) {
     if (user.username === "Mateus_Street")
         return "\u{1F697}"
     if (user.username === "Fabits")
-        return "\u{1F33B}"
+        return "\u{1F994}"
     if (user.username === "LucasCerqueira")
         return "\u{2618}"
+    if (user.username === "naruzete")
+        return "\u{1F419}"
     return ""
 }
 

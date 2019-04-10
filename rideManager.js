@@ -85,7 +85,6 @@ class RideManager {
 		for (const direction of Object.keys(this.rides[chatId]))
 			for (const [userId, ride] of Object.entries(this.rides[chatId][direction]))
 				if (new Date(ride.time) < now) {
-					// console.log('Removing ride of ' + ride.user.first_name + ' at ' + ride.time)
 					removed = true
 					delete this.rides[chatId][direction][userId]
 				}
