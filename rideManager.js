@@ -210,9 +210,9 @@ class RideManager {
 				// changedDate = true
 				if (previousDate)
 					message += "\n"
-				message += Utils.getSpecialDayEmoji(day, month) + "*" + (day < 10 ? "0" + day : day)
+				message += Utils.getSpecialDayEmoji(day, month) + "*" + (Utils.addZeroPadding(day))
 					+ "/"
-					+ (month < 10 ? "0" + month : month)
+					+ (Utils.addZeroPadding(month))
 					+ " - " + weekday + "* " + Const.emojis[date.getDay()]
 					+ "\n"
 			}
@@ -224,8 +224,8 @@ class RideManager {
 			}
 
 			// Ride info (time and description)
-			rideInfo = " - " + (hours < 10 ? "0" + hours : hours) + ":"
-				+ (minutes !== 0 ? minutes : '00') + " - "
+			rideInfo = " - " + (Utils.addZeroPadding(hours)) + ":"
+				+ (Utils.addZeroPadding(minutes)) + " - "
 				+ ride.description
 
 			// If it is full, generate strikethrough text.
