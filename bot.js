@@ -44,6 +44,7 @@ bot.on('text', (msg) => {
       let timePattern = /^([01]?[0-9]|2[0-3])[:h]?([0-5][0-9])?$/
       let now, time, matches
       let description
+      let message
 
       if (fields[1].trim() === "hoje") {
         todayFlag = true
@@ -100,7 +101,7 @@ bot.on('text', (msg) => {
           })
 
       // List the rides after adding a new one
-      let message = rideManager.listRidesAsString(chatId)
+      message = rideManager.listRidesAsString(chatId)
       if (message != "")
         bot.sendMessage(chatId, message, { 'parse_mode': 'Markdown' })
       else
@@ -129,7 +130,7 @@ bot.on('text', (msg) => {
     case '/lista':
       // Clean old rides
       rideManager.clean(chatId)
-      let message = rideManager.listRidesAsString(chatId)
+      message = rideManager.listRidesAsString(chatId)
       if (message != "")
         bot.sendMessage(chatId, message, { 'parse_mode': 'Markdown' })
       else
@@ -147,7 +148,7 @@ bot.on('text', (msg) => {
           { 'reply_to_message_id': msg.message_id })
 
         // List the rides after removing one of them
-        let message = rideManager.listRidesAsString(chatId)
+        message = rideManager.listRidesAsString(chatId)
         if (message != "")
           bot.sendMessage(chatId, message, { 'parse_mode': 'Markdown' })
         else
