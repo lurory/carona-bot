@@ -100,9 +100,11 @@ bot.on('text', (msg) => {
           })
 
       // List the rides after adding a new one
-      bot.sendMessage(chatId, Utils.getHelpMessage(), {
-        'parse_mode': 'Markdown'
-      })
+      let message = rideManager.listRidesAsString(chatId)
+      if (message != "")
+        bot.sendMessage(chatId, message, { 'parse_mode': 'Markdown' })
+      else
+        bot.sendMessage(chatId, 'Nenhuma carona cadastrada até o momento.', { 'parse_mode': 'Markdown' })
       break
 
     case '/lotou':
@@ -145,10 +147,12 @@ bot.on('text', (msg) => {
           { 'reply_to_message_id': msg.message_id })
 
         // List the rides after removing one of them
-        bot.sendMessage(chatId, Utils.getHelpMessage(), {
-          'parse_mode': 'Markdown'
-        })
-      } 
+        let message = rideManager.listRidesAsString(chatId)
+        if (message != "")
+          bot.sendMessage(chatId, message, { 'parse_mode': 'Markdown' })
+        else
+          bot.sendMessage(chatId, 'Nenhuma carona cadastrada até o momento.', { 'parse_mode': 'Markdown' })
+        } 
       else
         bot.sendMessage(chatId,
           user.first_name + ', você não possui uma ' + fields[1] + ' cadastrada.',
