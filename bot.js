@@ -32,6 +32,8 @@ bot.on('text', (msg) => {
   if (command.indexOf('@carona_v2_bot') > -1)
     command = command.split('@')[0]
 
+  let message
+
   switch (command) {
     case '/ida':
     case '/volta':
@@ -44,7 +46,6 @@ bot.on('text', (msg) => {
       let timePattern = /^([01]?[0-9]|2[0-3])[:h]?([0-5][0-9])?$/
       let now, time, matches
       let description
-      let message
 
       if (fields[1].trim() === "hoje") {
         todayFlag = true
@@ -153,7 +154,7 @@ bot.on('text', (msg) => {
           bot.sendMessage(chatId, message, { 'parse_mode': 'Markdown' })
         else
           bot.sendMessage(chatId, 'Nenhuma carona cadastrada até o momento.', { 'parse_mode': 'Markdown' })
-        } 
+      }
       else
         bot.sendMessage(chatId,
           user.first_name + ', você não possui uma ' + fields[1] + ' cadastrada.',
