@@ -16,6 +16,7 @@
     "express": "^4.13.4",
     "mathjs": "^5.4.1",
     "mongodb": "^3.2.3",
+    "newrelic": "^5.6.3",
     "node-telegram-bot-api": "^0.30.0"
   }
 }
