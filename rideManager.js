@@ -6,11 +6,8 @@ const MongoClient = require('mongodb').MongoClient
 
 class RideManager {
 	constructor(filepath) {
-		this.filepath = filepath
-		this.client = new MongoClient(Const.MONGO_URL, { useNewUrlParser: true });
-
 		this.rides = {}
-		
+
 		MongoClient.connect(Const.MONGO_URL, { useNewUrlParser: true }, (err, client) => {
 			if (err) throw err;
 			const collection = client.db("storage").collection("carona-bot");
