@@ -1,11 +1,10 @@
 const Const = require('./const.js')
 const Utils = require("./utils.js")
 
-const fs = require('fs')
 const MongoClient = require('mongodb').MongoClient
 
 class RideManager {
-	constructor(filepath) {
+	constructor() {
 		this.rides = {}
 
 		MongoClient.connect(Const.MONGO_URL, { useNewUrlParser: true }, (err, client) => {
@@ -14,10 +13,9 @@ class RideManager {
 			// this.collection.insertOne(entry, (err, result) => {
 			// 	if (err) console.log(err)
 			// })
-			collection.find({}, { '_id': 0 }).toArray((err, result) => {
+			collection.find({}, { projection: {_id: 0 }}).toArray((err, result) => {
 				if (err) throw err
 				for (const entry of result) {
-					delete entry['_id']
 					this.rides[entry['chatId']] = entry
 				}
 			})

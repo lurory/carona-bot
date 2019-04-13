@@ -17,7 +17,7 @@ else {
 
 console.log('Bot server started in the ' + process.env.NODE_ENV + ' mode')
 
-rideManager = new RideManager('rides.json')
+rideManager = new RideManager()
 
 bot.on('text', (msg) => {
   if (msg.text[0] != "/")
