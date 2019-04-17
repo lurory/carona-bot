@@ -4,6 +4,7 @@ const Bot = require('node-telegram-bot-api')
 
 const RideManager = require('./rideManager.js')
 const Utils = require("./utils.js")
+const Const = require("./const.js")
 
 let bot
 
@@ -173,6 +174,15 @@ bot.on('text', (msg) => {
       bot.sendMessage(chatId, Utils.getHelpMessage(), {
         'parse_mode': 'Markdown'
       })
+      break
+
+    case '/say':
+      if (Const.admin_users.includes(user.id)) {
+        const groupId = fields[1]
+        bot.sendMessage(groupId, fields.slice(2, fields.length).join(' '), {
+          'parse_mode': 'Markdown'
+        })
+      }
       break
 
     default:

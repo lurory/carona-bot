@@ -35,8 +35,14 @@ const emojis = [
     "\u{1F631}"
 ]
 
+const admin_users = [
+    146544127, // Lucas
+    173433762  // Fabiana
+]
+
 module.exports = {
     MONGO_URL,
     weekdays,
-    emojis
+    emojis,
+    admin_users
 }
