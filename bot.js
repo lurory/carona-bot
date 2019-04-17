@@ -60,7 +60,7 @@ bot.on('text', (msg) => {
       // Validating time format
       matches = timePattern.exec(time)
       if (!matches) {
-        bot.sendMessage(chatId, 'Horário no formato inválido. Ex: 10, 10h, 10:15, 10h15.', {
+        bot.sendMessage(chatId, 'Horário no formato inválido, utilize 10, 10h, 10:15, 10h15.\nEx: ' + command + ' 10h Largo do Bicão', {
           'reply_to_message_id': msg.message_id,
         })
         return
