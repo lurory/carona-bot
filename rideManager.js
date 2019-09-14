@@ -3,24 +3,36 @@ const Utils = require("./utils.js")
 
 const MongoClient = require('mongodb').MongoClient
 
+var client
+var db
+
 class RideManager {
 	constructor() {
 		this.rides = {}
 
-		MongoClient.connect(Const.MONGO_URL, { useNewUrlParser: true }, (err, client) => {
-			if (err) throw err;
-			const collection = client.db("storage").collection("carona-bot");
+		MongoClient.connect(Const.MONGO_URL, { useNewUrlParser: true }, (err, client_conn) => {
+			if (err) throw err
+
+			client = client_conn
+			db = client.db("storage")
+
+			console.log("Connected to the MongoDB")
+
 			// this.collection.insertOne(entry, (err, result) => {
 			// 	if (err) console.log(err)
 			// })
-			collection.find({}, { projection: {_id: 0 }}).toArray((err, result) => {
+			db.collection("carona-bot").find({}, { projection: {_id: 0 }}).toArray((err, result) => {
 				if (err) throw err
 				for (const entry of result) {
 					this.rides[entry['chatId']] = entry
 				}
 			})
-			client.close();
-		});
+		})
+	}
+
+	closeConnection() {
+		client.close()
+		console.log("Closed the MongoDB connection")
 	}
 
 	// Add/edit a ride and save to the file. Returns `true`
@@ -104,49 +116,35 @@ class RideManager {
 
 	// Function to update the MongoDB using a query
 	updateMongoWithQuery(chatId, query) {
-		MongoClient.connect(Const.MONGO_URL, { useNewUrlParser: true }, (err, client) => {
-			if (err) throw err;
-			const collection = client.db("storage").collection("carona-bot");
-
-			collection.updateOne({ 'chatId': chatId }, query,
-				{ 'upsert': true }, (error, res) => {
-					if (error) throw error;
-					console.log(res.modifiedCount + " element(s) modified.");
-				})
-
-			client.close();
-		});
+		db.collection("carona-bot").updateOne({ 'chatId': chatId }, query,
+			{ 'upsert': true }, (error, res) => {
+				if (error) throw error
+				console.log(res.modifiedCount + " element(s) modified.")
+			})
 	}
 
 	// Function to update a ride of a specific user
 	updateMongo(chatId, userId, direction) {
-		MongoClient.connect(Const.MONGO_URL, { useNewUrlParser: true }, (err, client) => {
-			if (err) throw err;
-			const collection = client.db("storage").collection("carona-bot");
-
-			let updateQuery
-			let key = direction + '.' + userId
-			if (this.rides[chatId][direction][userId])
-				updateQuery = {
-					$set: {
-						[key]: this.rides[chatId][direction][userId],
-					}
+		let updateQuery
+		let key = direction + '.' + userId
+		if (this.rides[chatId][direction][userId])
+			updateQuery = {
+				$set: {
+					[key]: this.rides[chatId][direction][userId],
 				}
-			else
-				updateQuery = {
-					$unset: {
-						[key]: "",
-					}
+			}
+		else
+			updateQuery = {
+				$unset: {
+					[key]: "",
 				}
+			}
 
-			collection.updateOne({ 'chatId': chatId }, updateQuery,
-				{ 'upsert': true }, (error, res) => {
-					if (error) throw error;
-					console.log(res.modifiedCount + " element(s) modified.");
-				})
-
-			client.close();
-		});
+		db.collection("carona-bot").updateOne({ 'chatId': chatId }, updateQuery,
+			{ 'upsert': true }, (error, res) => {
+				if (error) throw error
+				console.log(res.modifiedCount + " element(s) modified.")
+			})
 	}
 
 	// Returns a string ready to be sent to the users

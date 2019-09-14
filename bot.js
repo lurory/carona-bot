@@ -195,4 +195,10 @@ bot.on('polling_error', (error) => {
   console.log(error.code)  // => 'EFATAL'
 })
 
+process.on('SIGINT', function() {
+  console.log('SIGINT')
+  rideManager.closeConnection()
+  process.exit()
+})
+
 module.exports = bot
