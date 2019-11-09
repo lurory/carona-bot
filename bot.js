@@ -72,10 +72,11 @@ bot.on('text', (msg) => {
 
       // Get current time
       now = new Date().toLocaleString("pt-BR", { "timeZone": "America/Sao_Paulo" })
-//       fixed_now = now.setHours(now.getHours() - 1);
-      console.log(now)
-//       console.log(fixed_now)
       now = new Date(now)
+      console.log(now)
+      now.setHours(now.getHours() - 1);      
+      console.log(now)
+      
 
       // Setting date according to the ride time
       time = new Date(now.getTime())
