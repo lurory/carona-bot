@@ -36,7 +36,7 @@ bot.on('text', (msg) => {
   let message
 
   // Get current time
-  now = new Date().toLocaleString("pt-BR", { "timeZone": "America/Sao_Paulo" })
+  let now = new Date().toLocaleString("pt-BR", { "timeZone": "America/Sao_Paulo" })
   now = new Date(now)
   //Fixing daylight saving time bug for now
   now.setHours(now.getHours() - 1)
@@ -51,7 +51,7 @@ bot.on('text', (msg) => {
 
       let todayFlag = false
       let timePattern = /^([01]?[0-9]|2[0-3])[:h]?([0-5][0-9])?$/
-      let now, time, matches
+      let time, matches
       let description
 
       if (fields[1].trim() === "hoje") {
