@@ -88,7 +88,7 @@ class RideManager {
 	}
 
 	// Clean past rides and update the file.
-	clean(chatId) {
+	clean(chatId, now) {
 		if (!this.rides.hasOwnProperty(chatId)) {
 			this.rides[chatId] = {}
 			this.rides[chatId]['going'] = {}
@@ -96,8 +96,8 @@ class RideManager {
 			return
 		}
 
-		let now = new Date().toLocaleString("pt-BR", { "timeZone": "America/Sao_Paulo" })
-		now = new Date(now)
+		// let now = new Date().toLocaleString("pt-BR", { "timeZone": "America/Sao_Paulo" })
+		// now = new Date(now)
 		let removed = false
 		let removedRides = {}
 		for (const direction of Object.keys(this.rides[chatId]))

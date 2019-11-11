@@ -35,6 +35,12 @@ bot.on('text', (msg) => {
 
   let message
 
+  // Get current time
+  now = new Date().toLocaleString("pt-BR", { "timeZone": "America/Sao_Paulo" })
+  now = new Date(now)
+  //Fixing daylight saving time bug for now
+  now.setHours(now.getHours() - 1)
+
   switch (command) {
     case '/ida':
     case '/volta':
@@ -68,15 +74,7 @@ bot.on('text', (msg) => {
       }
 
       // Clean old rides
-      rideManager.clean(chatId)
-
-      // Get current time
-      now = new Date().toLocaleString("pt-BR", { "timeZone": "America/Sao_Paulo" })
-      now = new Date(now)
-      console.log(now)
-      now.setHours(now.getHours() - 1);      
-      console.log(now)
-      
+      rideManager.clean(chatId, now)
 
       // Setting date according to the ride time
       time = new Date(now.getTime())
@@ -138,7 +136,7 @@ bot.on('text', (msg) => {
 
     case '/lista':
       // Clean old rides
-      rideManager.clean(chatId)
+      rideManager.clean(chatId, now)
       message = rideManager.listRidesAsString(chatId)
       if (message != "")
         bot.sendMessage(chatId, message, { 'parse_mode': 'Markdown' })
@@ -171,7 +169,8 @@ bot.on('text', (msg) => {
       break
 
     case '/limpar':
-      rideManager.clean(chatId)
+      //Used for debug
+      rideManager.clean(chatId, now)
       break
 
     case '/help':
