@@ -203,11 +203,13 @@ bot.on('polling_error', (error) => {
 process.on('SIGINT', function() {
   console.log('SIGINT')
   rideManager.closeConnection()
+  process.exit()
 })
 
 process.on('SIGTERM', function() {
   console.log('SIGTERM')
   rideManager.closeConnection()
+  process.exit()
 })
 
 module.exports = bot
