@@ -203,17 +203,17 @@ class RideManager {
 				changedDate = true
 				if (previousDate)
 					message += "\n"
-				message += Utils.getSpecialDayEmoji(day, month) + "*" + (Utils.addZeroPadding(day))
+				message += Utils.getSpecialDayEmoji(day, month) + "<b>" + (Utils.addZeroPadding(day))
 					+ "/"
 					+ (Utils.addZeroPadding(month))
-					+ " - " + weekday + "* " + Const.emojis[date.getDay()]
+					+ " - " + weekday + "</b> " + Const.emojis[date.getDay()]
 					+ "\n"
 			}
 
 			// Check if direction changed to print a new line and the new direction
 			if (!previousDirection || changedDate || previousDirection !== ride.direction) {
 				message += '\n'
-				message += (ride.direction === "going") ? "*IDA*\n" : "*VOLTA*\n"
+				message += (ride.direction === "going") ? "<b>IDA</b>\n" : "<b>VOLTA</b>\n"
 			}
 
 			// Ride info (time and description)
@@ -231,8 +231,7 @@ class RideManager {
 			// If it is not, create a link for the user.
 			else {
 				rideInfo = (Utils.getUserEmoji(ride.user)) + " "
-					+ "[" + ride.user.first_name + " " + (ride.user.last_name || "") + "]"
-					+ "(tg://user?id=" + ride.user.id + ")"
+					+ Utils.getUserLink(ride.user.id, ride.user.first_name, ride.user.last_name)
 					+ rideInfo
 				message += rideInfo + "\n"
 			}

@@ -1,7 +1,7 @@
 // Function to return the strikethrough version
 // of a giver string.
 function strikeThrough(text) {
-    return text.split('').map(char => char + '\u0336').join('')
+    return `<s>${text}</s>`
 }
 
 // Function to zero pad hour or minute strings
@@ -49,18 +49,19 @@ function getSpecialDayEmoji(day, month) {
 function getHelpMessage() {
     return "Olá! Sou o Carona Bot v2.0!\n\n" +
         "/lista - Lista as caronas registradas.\n" +
-        "/ida *[horário] [descrição]* - Adiciona sua ida para o horário especificado. Se você já possuir uma ida, ela será atualizada.\n*Ex: /ida 7:30 Vila da Penha*\n" +
-        "/volta *[horário] [descrição]* - Adiciona sua volta para o horário especificado. Se você já possuir uma volta, ela será atualizada.\n*Ex: /volta 17 Largo do Bicão*\n" +
-        "/remover *ida*/*volta* - Remove sua ida ou volta, dependendo da opção escolhida. *Ex: /remover ida*\n" +
-        "/lotou *ida*/*volta* - Marca a sua carona de ida ou volta como lotada, dependendo da opção escolhida. *Ex: /lotou volta*\n" +
-        "/vagou *ida*/*volta* - Marca a sua carona de ida ou volta como disponível, dependendo da opção escolhida. *Ex: /vagou ida*\n" +
+        "/ida <b>[horário] [descrição]</b> - Adiciona sua ida para o horário especificado. Se você já possuir uma ida, ela será atualizada.\n<b>Ex: /ida 7:30 Vila da Penha</b>\n" +
+        "/volta <b>[horário] [descrição]</b> - Adiciona sua volta para o horário especificado. Se você já possuir uma volta, ela será atualizada.\n<b>Ex: /volta 17 Largo do Bicão</b>\n" +
+        "/remover <b>ida</b>/<b>volta</b> - Remove sua ida ou volta, dependendo da opção escolhida. <b>Ex: /remover ida</b>\n" +
+        "/lotou <b>ida</b>/<b>volta</b> - Marca a sua carona de ida ou volta como lotada, dependendo da opção escolhida. <b>Ex: /lotou volta</b>\n" +
+        "/vagou <b>ida</b>/<b>volta</b> - Marca a sua carona de ida ou volta como disponível, dependendo da opção escolhida. <b>Ex: /vagou ida</b>\n" +
         "/help ou /ajuda - Exibe essa mensagem.\n\n" +
-        "Criado por [Fabiana Ferreira](tg://user?id=173433762) e [Lucas Cerqueira](tg://user?id=146544127)."
+        `Criado por ${getUserLink("173433762", "Fabiana", "Ferreira")} e ${getUserLink("146544127", "Lucas", "Cerqueira")}.`
 }
 
 module.exports = {
     strikeThrough,
     addZeroPadding,
+    getUserLink,
     getUserEmoji,
     getSpecialDayEmoji,
     getHelpMessage
