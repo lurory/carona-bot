@@ -11,11 +11,16 @@ function addZeroPadding(time) {
     return time
 }
 
+function getUserLink(id, name, lastName) {
+    console.log(id)
+    return `<a href="tg://user?id=${id}">` + name + " " + (lastName || "") + "</a>"
+}
+
 // Easter-egg function to return special emojis for some users
 function getUserEmoji(user) {
     if (user.username === "Mateus_Street")
         return "\u{1F697}"
-    if (user.username === "Fabits")
+    if (user.username === "fabits")
         return "\u{1F994}"
     if (user.username === "LucasCerqueira")
         return "\u{2618}"
