@@ -12,7 +12,6 @@ function addZeroPadding(time) {
 }
 
 function getUserLink(id, name, lastName) {
-    console.log(id)
     return `<a href="tg://user?id=${id}">` + name + " " + (lastName || "") + "</a>"
 }
 

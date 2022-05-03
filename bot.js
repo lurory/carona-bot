@@ -43,7 +43,7 @@ bot.on('text', (msg) => {
     case '/ida':
     case '/volta':
       if (fields.length < 3) {
-        bot.sendMessage(chatId, command + ' [horário] [descrição]')
+        bot.sendMessage(chatId, `Para cadastrar sua ${command.slice(1)}, digite: \n ${command} [horário] [descrição]`)
         return
       }
 
