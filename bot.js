@@ -38,8 +38,6 @@ bot.on('text', (msg) => {
   // Get current time
   let now = new Date().toLocaleString("pt-BR", { "timeZone": "America/Sao_Paulo" })
   now = new Date(now)
-  //Fixing daylight saving time bug for now
-  now.setHours(now.getHours() - 1)
 
   switch (command) {
     case '/ida':
@@ -90,29 +88,20 @@ bot.on('text', (msg) => {
       if (!todayFlag && time < now)
         time.setDate(time.getDate() + 1)
 
-
       let isEdit = rideManager.addRide(chatId, user, time, description,
         command === '/ida' ? 'going' : 'coming')
 
       if (isEdit === true)
-        bot.sendMessage(chatId, 'Sua ' + command.slice(1) + ' foi atualizada.',
-          {
-            'reply_to_message_id': msg.message_id,
-            'parse_mode': 'Markdown'
-          })
+        bot.sendMessage(chatId, 'Sua ' + command.slice(1) + ' foi atualizada.', { 'reply_to_message_id': msg.message_id })
       else
-        bot.sendMessage(chatId, 'Sua ' + command.slice(1) + ' foi adicionada com sucesso.',
-          {
-            'reply_to_message_id': msg.message_id,
-            'parse_mode': 'Markdown'
-          })
+        bot.sendMessage(chatId, 'Sua ' + command.slice(1) + ' foi adicionada com sucesso.', { 'reply_to_message_id': msg.message_id })
 
       // List the rides after adding a new one
       message = rideManager.listRidesAsString(chatId)
       if (message != "")
-        bot.sendMessage(chatId, message, { 'parse_mode': 'Markdown' })
+        bot.sendMessage(chatId, message, { 'parse_mode': 'HTML' })
       else
-        bot.sendMessage(chatId, 'Nenhuma carona cadastrada até o momento.', { 'parse_mode': 'Markdown' })
+        bot.sendMessage(chatId, 'Nenhuma carona cadastrada até o momento.')
       break
 
     case '/lotou':
@@ -139,9 +128,9 @@ bot.on('text', (msg) => {
       rideManager.clean(chatId, now)
       message = rideManager.listRidesAsString(chatId)
       if (message != "")
-        bot.sendMessage(chatId, message, { 'parse_mode': 'Markdown' })
+        bot.sendMessage(chatId, message, { 'parse_mode': 'HTML' })
       else
-        bot.sendMessage(chatId, 'Nenhuma carona cadastrada até o momento.', { 'parse_mode': 'Markdown' })
+        bot.sendMessage(chatId, 'Nenhuma carona cadastrada até o momento.')
       break
 
     case '/remover':
@@ -157,9 +146,9 @@ bot.on('text', (msg) => {
         // List the rides after removing one of them
         message = rideManager.listRidesAsString(chatId)
         if (message != "")
-          bot.sendMessage(chatId, message, { 'parse_mode': 'Markdown' })
+          bot.sendMessage(chatId, message, { 'parse_mode': 'HTML' })
         else
-          bot.sendMessage(chatId, 'Nenhuma carona cadastrada até o momento.', { 'parse_mode': 'Markdown' })
+          bot.sendMessage(chatId, 'Nenhuma carona cadastrada até o momento.')
       }
       else
         bot.sendMessage(chatId,
@@ -175,17 +164,13 @@ bot.on('text', (msg) => {
 
     case '/help':
     case '/ajuda':
-      bot.sendMessage(chatId, Utils.getHelpMessage(), {
-        'parse_mode': 'Markdown'
-      })
+      bot.sendMessage(chatId, Utils.getHelpMessage(), {'parse_mode': 'HTML'})
       break
 
     case '/say':
       if (Const.admin_users.includes(user.id)) {
         const groupId = fields[1]
-        bot.sendMessage(groupId, fields.slice(2, fields.length).join(' '), {
-          'parse_mode': 'Markdown'
-        })
+        bot.sendMessage(groupId, fields.slice(2, fields.length).join(' '))
       }
       break
 
