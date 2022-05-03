@@ -200,17 +200,17 @@ class RideManager {
 				changedDate = true
 				if (previousDate)
 					message += "\n"
-				message += Utils.getSpecialDayEmoji(day, month) + "<b>" + (Utils.addZeroPadding(day))
+				message += Utils.getSpecialDayEmoji(day, month) + "*" + (Utils.addZeroPadding(day))
 					+ "/"
 					+ (Utils.addZeroPadding(month))
-					+ " - " + weekday + "</b> " + Const.emojis[date.getDay()]
+					+ " - " + weekday + "* " + Const.emojis[date.getDay()]
 					+ "\n"
 			}
 
 			// Check if direction changed to print a new line and the new direction
 			if (!previousDirection || changedDate || previousDirection !== ride.direction) {
 				message += '\n'
-				message += (ride.direction === "going") ? "<b>IDA</b>\n" : "<b>VOLTA</b>\n"
+				message += (ride.direction === "going") ? "*IDA*\n" : "*VOLTA*\n"
 			}
 
 			// Ride info (time and description)

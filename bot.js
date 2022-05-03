@@ -38,6 +38,8 @@ bot.on('text', (msg) => {
   // Get current time
   let now = new Date().toLocaleString("pt-BR", { "timeZone": "America/Sao_Paulo" })
   now = new Date(now)
+   //Fixing daylight saving time bug for now
+   now.setHours(now.getHours() - 1)
 
   switch (command) {
     case '/ida':
@@ -99,7 +101,7 @@ bot.on('text', (msg) => {
       // List the rides after adding a new one
       message = rideManager.listRidesAsString(chatId)
       if (message != "")
-        bot.sendMessage(chatId, message, { 'parse_mode': 'HTML' })
+        bot.sendMessage(chatId, message, { 'parse_mode': 'Markdown' })
       else
         bot.sendMessage(chatId, 'Nenhuma carona cadastrada até o momento.')
       break
@@ -128,7 +130,7 @@ bot.on('text', (msg) => {
       rideManager.clean(chatId, now)
       message = rideManager.listRidesAsString(chatId)
       if (message != "")
-        bot.sendMessage(chatId, message, { 'parse_mode': 'HTML' })
+        bot.sendMessage(chatId, message, { 'parse_mode': 'Markdown' })
       else
         bot.sendMessage(chatId, 'Nenhuma carona cadastrada até o momento.')
       break
@@ -146,7 +148,7 @@ bot.on('text', (msg) => {
         // List the rides after removing one of them
         message = rideManager.listRidesAsString(chatId)
         if (message != "")
-          bot.sendMessage(chatId, message, { 'parse_mode': 'HTML' })
+          bot.sendMessage(chatId, message, { 'parse_mode': 'Markdown' })
         else
           bot.sendMessage(chatId, 'Nenhuma carona cadastrada até o momento.')
       }
@@ -164,7 +166,7 @@ bot.on('text', (msg) => {
 
     case '/help':
     case '/ajuda':
-      bot.sendMessage(chatId, Utils.getHelpMessage(), {'parse_mode': 'HTML'})
+      bot.sendMessage(chatId, Utils.getHelpMessage(), {'parse_mode': 'Markdown'})
       break
 
     case '/say':
