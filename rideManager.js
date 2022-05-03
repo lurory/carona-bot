@@ -18,9 +18,6 @@ class RideManager {
 
 			console.log("Connected to the MongoDB")
 
-			// this.collection.insertOne(entry, (err, result) => {
-			// 	if (err) console.log(err)
-			// })
 			db.collection("carona-bot").find({}, { projection: {_id: 0 }}).toArray((err, result) => {
 				if (err) throw err
 				for (const entry of result) {
@@ -241,7 +238,6 @@ class RideManager {
 			changedDate = false
 		})
 
-		// Return the full message.
 		return message
 	}
 }
