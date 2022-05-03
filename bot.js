@@ -38,6 +38,8 @@ bot.on('text', (msg) => {
   // Get current time
   let now = new Date().toLocaleString("pt-BR", { "timeZone": "America/Sao_Paulo" })
   now = new Date(now)
+  //Fixing daylight saving time bug for now
+  now.setHours(now.getHours() - 1)
 
   switch (command) {
     case '/ida':
