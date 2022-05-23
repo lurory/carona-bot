@@ -29,6 +29,7 @@ bot.on('text', (msg) => {
 
   const fields = msg.text.split(' ')
   command = fields[0]
+  command = command.toLowerCase()
 
   if (command.indexOf('@carona_v2_bot') > -1)
     command = command.split('@')[0]
