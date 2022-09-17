@@ -1,45 +1,15 @@
 import { User, Ride, Entry } from './typings/ride'
+import * as db from './src/database'
 const Const = require('./const.js')
 const Utils = require('./utils.js')
 
-const MongoClient = require('mongodb').MongoClient
-
-var client
-var db
-
-type RidesObject = { [key: string]: Entry }
+// type RidesObject = { [key: string]: Entry }
 
 export default class RideManager {
-  private rides: RidesObject
+  // private rides: RidesObject
   constructor() {
-    this.rides = {}
-
-    MongoClient.connect(
-      Const.MONGO_URL,
-      { useNewUrlParser: true },
-      (err: Error, client_conn: any) => {
-        if (err) throw err
-
-        client = client_conn
-        db = client.db('storage')
-
-        console.log('Connected to the MongoDB')
-
-        db.collection('carona-bot')
-          .find({}, { projection: { _id: 0 } })
-          .toArray((err: Error, result: Entry[]) => {
-            if (err) throw err
-            for (const entry of result) {
-              this.rides[entry.chatId] = entry
-            }
-          })
-      }
-    )
-  }
-
-  closeConnection() {
-    client.close()
-    console.log('Closed the MongoDB connection')
+    // this.rides = {}
+    db.connectToDatabase()
   }
 
   public addRide(

@@ -4,11 +4,10 @@ import { MONGO_URL, MONGO_COLLECTION_NAME } from '../utils/const'
 import { Entry } from '../typings/ride'
 
 export const collections: { rides?: mongoDB.Collection } = {}
+const client: mongoDB.MongoClient = new mongoDB.MongoClient(MONGO_URL)
 
 export function connectToDatabase() {
   dotenv.config()
-
-  const client: mongoDB.MongoClient = new mongoDB.MongoClient(MONGO_URL)
 
   client.connect((err: any, _: any) => {
     if (err) throw err
@@ -24,6 +23,13 @@ export function connectToDatabase() {
   console.log(
     `Successfully connected to database: ${db.databaseName} and collection: ${ridesCollection.collectionName}`
   )
+}
+
+export function closeConnection() {
+  client.close((err: any, _: any) => {
+    if (err) throw err
+    console.log('Closed the MongoDB connection')
+  })
 }
 
 export async function scrapeGroupRides(chatId: number): Promise<unknown> {
