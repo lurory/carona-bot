@@ -5,12 +5,15 @@ import { Entry } from '../typings/ride'
 
 export const collections: { rides?: mongoDB.Collection } = {}
 
-export async function connectToDatabase() {
+export function connectToDatabase() {
   dotenv.config()
 
   const client: mongoDB.MongoClient = new mongoDB.MongoClient(MONGO_URL)
 
-  await client.connect()
+  client.connect((err: any, _: any) => {
+    if (err) throw err
+    console.log('Connected to the MongoDB')
+  })
 
   const db: mongoDB.Db = client.db(process.env.DB_NAME)
 
