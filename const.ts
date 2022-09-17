@@ -1,8 +1,10 @@
-MONGO_URL = 'mongodb+srv://' + process.env.MONGO_USER + ':' + process.env.MONGO_PASSW +
+export const MONGO_URL = 'mongodb+srv://' + process.env.MONGO_USER + ':' + process.env.MONGO_PASSW +
             '@cluster0-bnobp.mongodb.net/test?retryWrites=true&w=majority'
 
+export const MONGO_COLLECTION_NAME = 'carona-bot'
+
 // Weekdays names
-const weekdays = 
+export const weekdays = 
 {
     pt_br: [
         "Domingo",
@@ -25,7 +27,7 @@ const weekdays =
 }
 
 // Emojis for each weekday
-const emojis = [
+export const emojis = [
     "\u{1F62B}",
     "\u{1F62D}",
     "\u{1F610}",
@@ -35,14 +37,7 @@ const emojis = [
     "\u{1F631}"
 ]
 
-const admin_users = [
+export const admin_users = [
     146544127, // Lucas
     173433762  // Fabiana
 ]
-
-module.exports = {
-    MONGO_URL,
-    weekdays,
-    emojis,
-    admin_users
-}
