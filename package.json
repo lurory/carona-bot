@@ -7,15 +7,23 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node index.js",
     "stop": "pkill --signal SIGINT caronaBot",
+    "prettier-format": "prettier --config .prettierrc 'src/**/*.ts' --write",
     "switch_to_dev": "export $(cat .env | xargs) && wget --spider https://api.telegram.org/bot$TOKEN/setWebhook?url= --delete-after && node index.js"
   },
   "author": "Fabiana Ferreira, Lucas Cerqueira",
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.15.0",
-    "dotenv": "^4.0.0",
+    "dotenv": "^16.0.2",
     "express": "^4.13.4",
-    "mongodb": "^3.2.3",
+    "mongodb": "^4.9.1",
     "node-telegram-bot-api": "^0.50.0"
+  },
+  "devDependencies": {
+    "@types/co-body": "^0.0.3",
+    "@types/jest": "^24.0.18",
+    "@types/node": "^12.0.0",
+    "@types/ramda": "types/npm-ramda#dist",
+    "typescript": "3.9.7"
   }
 }
