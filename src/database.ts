@@ -1,7 +1,7 @@
 import * as mongoDB from 'mongodb'
 import * as dotenv from 'dotenv'
-import { MONGO_URL, MONGO_COLLECTION_NAME } from './const'
-import { Entry } from './typings/ride'
+import { MONGO_URL, MONGO_COLLECTION_NAME } from '../utils/const'
+import { Entry } from '../typings/ride'
 
 export const collections: { rides?: mongoDB.Collection } = {}
 
