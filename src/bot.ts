@@ -194,4 +194,4 @@ process.on('SIGTERM', function () {
   process.exit()
 })
 
-module.exports = tgBot
+export default tgBot
