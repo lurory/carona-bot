@@ -1,9 +1,9 @@
-import { Group, Ride } from './typings/ride'
+import { Group, Ride } from '../typings/ride'
 import Bot from 'node-telegram-bot-api'
-import * as db from './src/database'
-import { weekdays, emojis } from './utils/const'
-import * as format from './utils/format'
-import { getUserLink } from './utils/bot'
+import * as db from './database'
+import { weekdays, emojis } from '../utils/const'
+import * as format from '../utils/format'
+import { getUserLink } from '../utils/bot'
 
 export default class RideManager {
   constructor() {

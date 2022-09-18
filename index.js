@@ -2,5 +2,5 @@ require("dotenv").config()
 
 process.title = "caronaBot"
 
-var bot = require('./bot')
-require('./web')(bot)
+var bot = require('./src/bot')
+require('./src/web')(bot)
