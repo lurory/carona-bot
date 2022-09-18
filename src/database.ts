@@ -33,7 +33,7 @@ export function closeConnection() {
 }
 
 export async function scrapeGroupRides(chatId: number): Promise<unknown> {
-  return await collections.rides?.find({ chatId: chatId }).toArray()
+  return collections.rides?.find({ chatId: chatId })
 }
 
 export async function getRide(filter: mongoDB.Filter<mongoDB.Document>): Promise<unknown> {
@@ -58,18 +58,33 @@ export async function createGroup(
   return result
 }
 
-export async function updateRide(
+export function updateGroup(
   chatId: number,
   mutation: Partial<mongoDB.Document>,
-  shouldUpsert: boolean
+  options: {
+    upsert: boolean
+  }
 ) {
-  collections.rides?.updateOne(
-    { chatId: chatId },
-    mutation,
-    { upsert: shouldUpsert },
-    (error, res) => {
-      if (error) throw error
-      console.log(res?.modifiedCount + ' element(s) modified.')
-    }
-  )
+  let wasMofidied = false
+  collections.rides?.updateOne({ chatId: chatId }, mutation, options, (error, res) => {
+    if (error) throw error
+    wasMofidied = (res?.modifiedCount as number) > 0
+    console.log(res?.modifiedCount + ' element(s) modified.')
+  })
+
+  return wasMofidied
+}
+
+export async function cleanRides(
+  params: {
+    chatId: number
+    direction: string
+    now: Date
+  },
+  mutation: Partial<mongoDB.Document>
+) {
+  collections.rides?.updateOne({ chatId: params.chatId }, mutation, (error, res) => {
+    if (error) throw error
+    console.log(res?.modifiedCount + ' element(s) modified.')
+  })
 }

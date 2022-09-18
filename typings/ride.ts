@@ -13,12 +13,15 @@ export interface User {
   is_bot: boolean
 }
 
-export interface RidesPerDirection {
-  [key: string]: {
+export interface Group {
+  going?: {
+    [key: string]: Ride
+  }
+  coming?: {
     [key: string]: Ride
   }
 }
 
-export type Entry = RidesPerDirection & {
+export type Entry = Group & {
   chatId: number
 }
