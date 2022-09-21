@@ -1,7 +1,7 @@
 import * as mongoDB from 'mongodb'
 import * as dotenv from 'dotenv'
 import { MONGO_URL, MONGO_COLLECTION_NAME } from '../utils/const'
-import { Entry } from '../typings/ride'
+import { Group } from '../typings/ride'
 
 export const collections: { rides?: mongoDB.Collection } = {}
 const client: mongoDB.MongoClient = new mongoDB.MongoClient(MONGO_URL)
@@ -47,7 +47,7 @@ export async function getRide(filter: mongoDB.Filter<mongoDB.Document>): Promise
 }
 
 export async function createGroup(
-  newGroup: Entry
+  newGroup: Group
 ): Promise<mongoDB.InsertOneResult<mongoDB.Document> | undefined> {
   const result = await collections.rides?.insertOne(newGroup)
 

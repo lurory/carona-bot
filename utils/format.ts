@@ -1,20 +1,18 @@
+import { specialUsers } from './const'
+import { User } from 'node-telegram-bot-api'
+
 export const strikeThrough = (text: string): string => {
   return `<s>${text}</s>`
 }
 
 // Function to zero pad hour or minute strings
 export const addZeroPadding = (time: number): string => {
-  if (time < 10) return '0' + time.toString()
+  if (time < 10) return String(time).padStart(2, '0')
   return time.toString()
 }
 
-// TODO: Get correct types for Telegram user
-export const getUserEmoji = (user: any) => {
-  if (user.username === 'Mateus_Street') return '\u{1F697}'
-  if (user.username === 'fabits') return '\u{1F994}'
-  if (user.username === 'LucasCerqueira') return '\u{2618}'
-  if (user.username === 'naruzete') return '\u{1F419}'
-  return ''
+export const getUserEmoji = (user: User): string => {
+  return user.username ? specialUsers.get(user.username) || '' : ''
 }
 
 export const getSpecialDayEmoji = (day: number, month: number): string => {

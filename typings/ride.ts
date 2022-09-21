@@ -13,7 +13,7 @@ export interface User {
   is_bot: boolean
 }
 
-export interface Group {
+export interface GroupRides {
   going?: {
     [key: string]: Ride
   }
@@ -22,6 +22,6 @@ export interface Group {
   }
 }
 
-export type Entry = Group & {
+export type Group = GroupRides & {
   chatId: number
 }

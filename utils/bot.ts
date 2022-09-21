@@ -33,15 +33,14 @@ export const getRideInfo = (fields: string[]) => {
 }
 
 export const setRideDateAndTime = (now: Date, rideTime: string[], isToday: boolean) => {
-  let dateWithTime = new Date(now.getTime())
-  dateWithTime.setSeconds(0)
-  dateWithTime.setHours(parseInt(rideTime[1]))
+  now.setSeconds(0)
+  now.setHours(parseInt(rideTime[1]))
 
-  rideTime[2] ? dateWithTime.setMinutes(parseInt(rideTime[2])) : dateWithTime.setMinutes(0)
+  rideTime[2] ? now.setMinutes(parseInt(rideTime[2])) : now.setMinutes(0)
 
-  if (!isToday && dateWithTime < now) dateWithTime.setDate(dateWithTime.getDate() + 1)
+  if (!isToday && now < now) now.setDate(now.getDate() + 1)
 
-  return dateWithTime
+  return now
 }
 
 export const getUserLink = (id: number, name: string, lastName: string): string =>
@@ -65,8 +64,8 @@ export const getHelpMessage = (): string => {
     '/lotou <b>ida</b>/<b>volta</b> - Marca a sua carona de ida ou volta como lotada, dependendo da opção escolhida. <b>Ex: /lotou volta</b>\n' +
     '/vagou <b>ida</b>/<b>volta</b> - Marca a sua carona de ida ou volta como disponível, dependendo da opção escolhida. <b>Ex: /vagou ida</b>\n' +
     '/help ou /ajuda - Exibe essa mensagem.\n\n' +
-    `Criado por ${getUserLink('173433762', 'Fabiana', 'Ferreira')} e ${getUserLink(
-      '146544127',
+    `Criado por ${getUserLink(173433762, 'Fabiana', 'Ferreira')} e ${getUserLink(
+      146544127,
       'Lucas',
       'Cerqueira'
     )}.`

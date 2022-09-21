@@ -30,3 +30,10 @@ export const adminUsers = [
 ]
 
 export const timeRegexPattern = /^([01]?[0-9]|2[0-3])[:h]?([0-5][0-9])?$/
+
+export const specialUsers: Map<string, string> = new Map([
+  ['Mateus_Street', '\u{1F697}'],
+  ['fabits', '\u{1F994}'],
+  ['LucasCerqueira', '\u{2618}'],
+  ['naruzete', '\u{1F419}']
+])
