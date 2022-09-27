@@ -2,8 +2,9 @@
   "compilerOptions": {
     "types": ["node", "jest"],
     "typeRoots": ["node_modules/@types"],
-    "target": "es2017",
-    "module": "commonjs",
+    "outDir": "bin",
+    // "module": "ESNext",
+    "module": "ESNext",
     "moduleResolution": "node",
     "allowJs": false,
     "allowSyntheticDefaultImports": true,
@@ -18,12 +19,10 @@
     "strictNullChecks": true,
     "strictFunctionTypes": true,
     "strictPropertyInitialization": true,
-    "esModuleInterop": true,
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
   },
   "typeAcquisition": {
     "enable": false
   },
-  // "include": ["global.ts", "./*.d.ts", "./**/*"],
   "exclude": ["node_modules"]
 }

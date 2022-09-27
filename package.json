@@ -2,10 +2,14 @@
   "name": "carona-bot",
   "version": "1.0.0",
   "description": "Telegram bot for sharing rides.",
-  "main": "index.js",
+  "main": "index.ts",
+  "type": "module",
   "scripts": {
+    "build": "tsc --build --clean && tsc --build",
+    "clean": "tsc --build --clean",
+    "start": "node ./bin/index.js",
+    "dev": "ts-node index.ts",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node index.js",
     "stop": "pkill --signal SIGINT caronaBot",
     "prettier-format": "prettier --config .prettierrc 'src/**/*.ts' --write",
     "switch_to_dev": "export $(cat .env | xargs) && wget --spider https://api.telegram.org/bot$TOKEN/setWebhook?url= --delete-after && node index.js"
@@ -26,6 +30,6 @@
     "@types/node": "^12.0.0",
     "@types/node-telegram-bot-api": "^0.57.1",
     "@types/ramda": "types/npm-ramda#dist",
-    "typescript": "3.9.7"
+    "typescript": "^4.7.2"
   }
 }
