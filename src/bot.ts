@@ -5,12 +5,12 @@ import {
   getWrongTimeFormatMessage,
   setRideDateAndTime,
   validateTimeFormat
-} from '../utils/bot'
+} from '../utils/bot.js'
 import Bot from 'node-telegram-bot-api'
-import { adminUsers } from '../utils/const'
-import { getHelpMessage } from '../utils/bot'
-import RideManager from './rideManager'
-import * as db from './database'
+import { adminUsers } from '../utils/const.js'
+import { getHelpMessage } from '../utils/bot.js'
+import RideManager from './rideManager.js'
+import * as db from './database.js'
 
 const token = process.env.TOKEN as string
 let tgBot: Bot

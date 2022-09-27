@@ -1,4 +1,4 @@
-import { specialUsers } from './const'
+import { specialUsers } from './const.js'
 import { User } from 'node-telegram-bot-api'
 
 export const strikeThrough = (text: string): string => {

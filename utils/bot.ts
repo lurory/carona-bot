@@ -1,4 +1,4 @@
-import { timeRegexPattern } from './const'
+import { timeRegexPattern } from './const.js'
 export const registerRide = () => {}
 
 export const getPureCommand = (command: string) => {

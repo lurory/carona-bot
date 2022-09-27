@@ -1,7 +1,7 @@
 import express, { Request, Response } from 'express'
 import { AddressInfo } from 'net'
 import bodyParser from 'body-parser'
-import packageInfo from '../package.json'
+import packageInfo from '../package.json' assert { type: "json" };
 
 const port = process.env.PORT || '80'
 const app = express()

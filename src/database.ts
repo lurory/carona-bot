@@ -1,7 +1,7 @@
 import * as mongoDB from 'mongodb'
 import * as dotenv from 'dotenv'
-import { MONGO_URL, MONGO_COLLECTION_NAME } from '../utils/const'
-import { Group } from '../typings/ride'
+import { MONGO_URL, MONGO_COLLECTION_NAME } from '../utils/const.js'
+import { Group } from '../typings/ride.js'
 
 export const collections: { rides?: mongoDB.Collection } = {}
 const client: mongoDB.MongoClient = new mongoDB.MongoClient(MONGO_URL)
