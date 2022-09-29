@@ -33,7 +33,7 @@ export async function scrapeGroupRides(chatId: number): Promise<unknown> {
   return await collections.rides?.find({ chatId: chatId }).toArray()
 }
 
-export async function getRide(filter: mongoDB.Filter<mongoDB.Document>): Promise<unknown> {
+export async function getRide(filter: mongoDB.Filter<mongoDB.Document>): Promise<unknown[]>
   const document = await collections.rides?.find(filter).toArray()
 
   if (!document) {

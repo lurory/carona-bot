@@ -44,7 +44,7 @@ export const setRideDateAndTime = (now: Date, rideTime: string[], isToday: boole
 }
 
 export const getUserLink = (id: number, name: string, lastName: string): string =>
-  `<a href="tg://user?id=${id}">` + name + ' ' + (lastName || '') + '</a>'
+`<a href="tg://user?id=${id}">${name} ${lastName || ''}</a>`
 
 export const getWrongTimeFormatMessage = (command: string): string => {
   return (
