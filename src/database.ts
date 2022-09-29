@@ -34,8 +34,8 @@ export default class Database {
       console.log('Closed the MongoDB connection')
     })
 
-  scrapeGroupRides = (chatId: number): Promise<GroupRides> =>
-    this._collection.find({ chatId: chatId }).toArray() as Promise<unknown> as Promise<GroupRides>
+  scrapeGroupRides = (chatId: number): Promise<Group[]> =>
+    this._collection.find({ chatId: chatId }).toArray() as Promise<unknown> as Promise<Group[]>
 
   getRide = async (filter: Filter<Document>): Promise<unknown[]> => {
     const document = await this._collection.find(filter).toArray()
