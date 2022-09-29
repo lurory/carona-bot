@@ -95,25 +95,14 @@ export default class RideManager {
     const goingRides = group.going !== undefined ? Object.values(group.going) : []
     let totalRides = comingRides.concat(goingRides)
 
-    //Sorting by day/month - direction - time
-    totalRides.sort((a, b) => {
-      let dateA = new Date(a.time)
-      let dateB = new Date(b.time)
-      let timeA =
-        format.addZeroPadding(dateA.getHours()) + ':' + format.addZeroPadding(dateA.getMinutes())
-      let timeB =
-        format.addZeroPadding(dateB.getHours()) + ':' + format.addZeroPadding(dateB.getMinutes())
-      let dayMonthA =
-        format.addZeroPadding(dateA.getDate()) + '/' + format.addZeroPadding(dateA.getMonth())
-      let dayMonthB =
-        format.addZeroPadding(dateB.getDate()) + '/' + format.addZeroPadding(dateB.getMonth())
-
-      return (
-        dayMonthA.localeCompare(dayMonthB) ||
+    //It sorts by day/month, then direction, then time
+    totalRides.sort(
+      (a, b) =>
+        ((new Date(a.time).setHours(0, 0, 0) <
+          new Date(b.time).setHours(0, 0, 0)) as unknown as number) ||
         b.direction.localeCompare(a.direction) ||
-        timeA.localeCompare(timeB)
-      )
-    })
+        ((new Date(a.time) < new Date(b.time)) as unknown as number)
+    )
 
     // Auxiliary variables
     let message = ''
