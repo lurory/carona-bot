@@ -65,8 +65,11 @@ export default class RideManager {
 
   public async cleanRides(chatId: number, now: Date) {
     const docs = await this.db.scrapeGroupRides(chatId)
-    const rides = { ...docs['going'], ...docs['coming'] }
+    if (docs.length === 0) return
 
+    // If it exists, it gets only the first document, because
+    // the chat id is unique
+    const rides = { ...docs[0]['going'], ...docs[0]['coming'] }
     const ridesToRemove = Object.values(rides)
       .filter((ride: Ride) => {
         ride.time < now
@@ -83,9 +86,8 @@ export default class RideManager {
   }
 
   public async listRidesAsString(chatId: number): Promise<string> {
-    let result = (await db.scrapeGroupRides(chatId)) as Group[]
+    let result = await this.db.scrapeGroupRides(chatId)
 
-    // No rides
     if (result.length === 0) return ''
 
     let group = result[0] as Group
