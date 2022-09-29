@@ -10,7 +10,6 @@ import Bot from 'node-telegram-bot-api'
 import { adminUsers } from '../utils/const.js'
 import { getHelpMessage } from '../utils/bot.js'
 import RideManager from './rideManager.js'
-import * as db from './database.js'
 
 let token: string
 let tgBot: Bot
@@ -186,13 +185,13 @@ tgBot.on('polling_error', (error: Error) => {
 
 process.on('SIGINT', function () {
   console.log('SIGINT')
-  db.closeConnection()
+  rideManager.db.disconnect()
   process.exit()
 })
 
 process.on('SIGTERM', function () {
   console.log('SIGTERM')
-  db.closeConnection()
+  rideManager.db.disconnect()
   process.exit()
 })
 

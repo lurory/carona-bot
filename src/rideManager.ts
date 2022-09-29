@@ -1,13 +1,16 @@
 import { Group, Ride } from '../typings/ride'
 import Bot from 'node-telegram-bot-api'
-import * as db from './database.js'
+import Database from './database.js'
 import { weekdays, emojis } from '../utils/const.js'
 import * as format from '../utils/format.js'
 import { getUserLink } from '../utils/bot.js'
 
 export default class RideManager {
+  db: Database
+
   constructor() {
-    db.connectToDatabase()
+    this.db = new Database()
+    this.db.connect()
   }
 
   public async addRide(
@@ -19,7 +22,7 @@ export default class RideManager {
       ...rideInfo
     }
 
-    return await db.updateGroup(
+    return await this.db.updateGroup(
       chatId,
       {
         $set: {
@@ -34,7 +37,7 @@ export default class RideManager {
     chatId: number,
     rideInfo: { userId: number; direction: string }
   ): Promise<boolean> {
-    return await db.updateGroup(
+    return await this.db.updateGroup(
       chatId,
       {
         $unset: {
@@ -49,7 +52,7 @@ export default class RideManager {
     chatId: number,
     rideInfo: { userId: number; direction: string; state: number }
   ): Promise<boolean> {
-    return await db.updateGroup(
+    return await this.db.updateGroup(
       chatId,
       {
         $set: {
@@ -61,7 +64,7 @@ export default class RideManager {
   }
 
   public async cleanRides(chatId: number, now: Date) {
-    const docs = (await db.scrapeGroupRides(chatId)) as Group
+    const docs = await this.db.scrapeGroupRides(chatId)
     const rides = { ...docs['going'], ...docs['coming'] }
 
     const ridesToRemove = Object.values(rides)
@@ -70,7 +73,7 @@ export default class RideManager {
       })
       .forEach((ride: Ride) => ride.direction + '.' + ride.user.id)
 
-    db.updateGroup(
+    this.db.updateGroup(
       chatId,
       {
         $unset: ridesToRemove
