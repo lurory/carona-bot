@@ -1,15 +1,13 @@
 import { specialUsers } from './const.js'
 import { User } from 'node-telegram-bot-api'
 
-export const strikeThrough = (text: string): string => {
-  return `<s>${text}</s>`
-}
+export const strikeThrough = (text: string): string => `<s>${text}</s>`
 
 // Function to zero pad hour or minute strings
-export const addZeroPadding = (time: number): string => {
-  if (time < 10) return String(time).padStart(2, '0')
-  return time.toString()
-}
+export const addZeroPadding = (time: number): string =>
+    time < 10 ? 
+    String(time).padStart(2, '0') : 
+    time.toString()
 
 export const getUserEmoji = (user: User): string => {
   return user.username ? specialUsers.get(user.username) || '' : ''

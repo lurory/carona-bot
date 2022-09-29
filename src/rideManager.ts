@@ -83,7 +83,7 @@ export default class RideManager {
     let result = (await db.scrapeGroupRides(chatId)) as Group[]
 
     // No rides
-    if (result.length == 0) return ''
+    if (result.length === 0) return ''
 
     let group = result[0] as Group
     const comingRides = group.coming !== undefined ? Object.values(group.coming) : []
