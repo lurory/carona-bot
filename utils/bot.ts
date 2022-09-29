@@ -33,14 +33,17 @@ export const getRideInfo = (fields: string[]) => {
 }
 
 export const setRideDateAndTime = (now: Date, rideTime: string[], isToday: boolean) => {
-  now.setSeconds(0)
-  now.setHours(parseInt(rideTime[1]))
+  let rideDateAndTime = new Date()
+  rideDateAndTime.setSeconds(0)
+  rideDateAndTime.setHours(parseInt(rideTime[1]))
 
-  rideTime[2] ? now.setMinutes(parseInt(rideTime[2])) : now.setMinutes(0)
+  rideTime[2] ? rideDateAndTime.setMinutes(parseInt(rideTime[2])) : rideDateAndTime.setMinutes(0)
 
-  if (!isToday && now < now) now.setDate(now.getDate() + 1)
+  // If the "today" flag is not present and the ride hour/minute is before
+  // the current time.
+  if (!isToday && rideDateAndTime < now) rideDateAndTime.setDate(rideDateAndTime.getDate() + 1)
 
-  return now
+  return rideDateAndTime
 }
 
 export const getUserLink = (id: number, name: string, lastName: string): string =>
