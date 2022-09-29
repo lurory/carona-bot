@@ -50,11 +50,7 @@ export const getUserLink = (id: number, name: string, lastName: string): string 
   `<a href="tg://user?id=${id}">${name} ${lastName || ''}</a>`
 
 export const getWrongTimeFormatMessage = (command: string): string => {
-  return (
-    'Horário no formato inválido, utilize 10, 10h, 10:15, 10h15.\nEx: ' +
-    command +
-    ' 10h Largo do Bicão'
-  )
+  return `Horário no formato inválido, utilize 10, 10h, 10:15, 10h15.\nEx: ${command} 10h Largo do Bicão`
 }
 
 export const getHelpMessage = (): string => {
@@ -80,6 +76,6 @@ export const createFullRideMessage = (
   params: { direction: string; userFirstName?: string }
 ) => {
   return wasSuccessful
-    ? 'Estado da sua carona de ' + params.direction + ' alterado.'
-    : ', você não possui uma ' + params.userFirstName + ' cadastrada.'
+    ? `Estado da sua carona de ${params.direction} alterado.`
+    : `, você não possui uma ${params.userFirstName} cadastrada.`
 }
