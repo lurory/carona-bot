@@ -2,20 +2,35 @@
   "name": "carona-bot",
   "version": "1.0.0",
   "description": "Telegram bot for sharing rides.",
-  "main": "index.js",
+  "main": "index.ts",
+  "type": "module",
   "scripts": {
+    "build": "tsc --build --clean && tsc --build",
+    "clean": "tsc --build --clean",
+    "start": "node ./bin/index.js",
+    "dev": "ts-node --esm index.ts",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node index.js",
     "stop": "pkill --signal SIGINT caronaBot",
+    "prettier-format": "prettier --config .prettierrc 'src/**/*.ts' --write",
     "switch_to_dev": "export $(cat .env | xargs) && wget --spider https://api.telegram.org/bot$TOKEN/setWebhook?url= --delete-after && node index.js"
   },
   "author": "Fabiana Ferreira, Lucas Cerqueira",
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.15.0",
-    "dotenv": "^4.0.0",
+    "dotenv": "^16.0.2",
     "express": "^4.13.4",
-    "mongodb": "^3.2.3",
-    "node-telegram-bot-api": "^0.50.0"
+    "mongodb": "^4.9.1",
+    "node-telegram-bot-api": "^0.59.0"
+  },
+  "devDependencies": {
+    "@types/co-body": "^0.0.3",
+    "@types/express": "^4.17.14",
+    "@types/jest": "^24.0.18",
+    "@types/node": "^12.0.0",
+    "@types/node-telegram-bot-api": "^0.57.1",
+    "@types/ramda": "types/npm-ramda#dist",
+    "ts-node": "^10.9.1",
+    "typescript": "^4.7.2"
   }
 }
