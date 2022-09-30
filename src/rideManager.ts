@@ -3,7 +3,7 @@ import Bot from 'node-telegram-bot-api'
 import Database from './database.js'
 import { weekdays, emojis } from '../utils/const.js'
 import * as format from '../utils/format.js'
-import { getUserLink } from '../utils/bot.js'
+import { getUserLink } from '../utils/messages.js'
 
 export default class RideManager {
   db: Database
