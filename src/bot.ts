@@ -49,7 +49,7 @@ tgBot.on('text', async (msg) => {
       break
 
     case '/lista':
-      await listRides(chatId, currentTime)
+      await listRides(chatId)
       break
 
     case '/remover':
