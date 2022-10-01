@@ -54,11 +54,7 @@ export const handleNewRide = async (
       reply_to_message_id: messageId
     })
 
-  bot.manager.listRidesAsString(chatId).then((msg: string) => {
-    msg != ''
-      ? bot.telegram.sendMessage(chatId, msg, { parse_mode: 'HTML' })
-      : bot.telegram.sendMessage(chatId, 'Nenhuma carona cadastrada até o momento.')
-  })
+  await listRides(chatId, now)
 }
 
 export const handleExistingRide = async (

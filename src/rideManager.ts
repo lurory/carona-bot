@@ -70,16 +70,18 @@ export default class RideManager {
     // If it exists, it gets only the first document, because
     // the chat id is unique
     const rides = { ...docs[0]['going'], ...docs[0]['coming'] }
-    const ridesToRemove = Object.values(rides)
-      .filter((ride: Ride) => {
-        ride.time < now
-      })
-      .forEach((ride: Ride) => ride.direction + '.' + ride.user.id)
+    const ridesToRemove = Object.values(rides).filter((ride: Ride) => ride.time < now)
+
+    let ridesToApply: { [x: string]: string } = {}
+    for (const ride of ridesToRemove) {
+      const key: string = `${ride.direction}.${ride.user.id}`
+      ridesToApply[key] = ''
+    }
 
     this.db.updateGroup(
       chatId,
       {
-        $unset: ridesToRemove
+        $unset: ridesToApply
       },
       { upsert: false }
     )
