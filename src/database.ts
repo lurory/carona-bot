@@ -1,5 +1,5 @@
 import { MongoClient, Collection, Db, InsertOneResult, Filter, Document } from 'mongodb'
-import { MONGO_URL, MONGO_COLLECTION_NAME } from '../utils/const.js'
+import { MONGO_URL, MONGO_COLLECTION_NAME } from './utils/const.js'
 import { Group } from '../typings/ride.js'
 
 export class Database {

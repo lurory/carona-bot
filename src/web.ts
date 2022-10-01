@@ -1,7 +1,6 @@
 import express, { Request, Response } from 'express'
 import { AddressInfo } from 'net'
 import bodyParser from 'body-parser'
-import packageInfo from '../package.json' assert { type: "json" };
 
 const port = process.env.PORT || '80'
 const app = express()
@@ -9,7 +8,7 @@ const app = express()
 app.use(bodyParser.json())
 
 app.get('/', function (_: Request, res: Response) {
-  res.json({ version: packageInfo.version })
+  res.status(200).json('OK')
 })
 
 let server = app.listen(parseInt(port), '0.0.0.0', () => {

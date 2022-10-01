@@ -2,12 +2,12 @@ import Bot from 'node-telegram-bot-api'
 
 import { Group, Ride } from '../typings/ride'
 
-import { compareValues } from './../utils/format.js'
-import { ridesToArray } from './../utils/bot.js'
+import { compareValues } from './utils/format.js'
+import { ridesToArray } from './utils/bot.js'
 import { Database } from './database.js'
-import { weekdays, emojis } from '../utils/const.js'
-import * as format from '../utils/format.js'
-import { getUserLink } from '../utils/messages.js'
+import { weekdays, emojis } from './utils/const.js'
+import * as format from './utils/format.js'
+import { getUserLink } from './utils/messages.js'
 
 export default class RideManager {
   db: Database
