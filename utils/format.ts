@@ -28,3 +28,13 @@ export const getSpecialDayEmoji = (day: number, month: number): string => {
 
   return ''
 }
+
+export const compareValues = (a: string | number | Date, b: string | number | Date): number => {
+  if (isString(a) && isString(b)) {
+    return b.localeCompare(a)
+  }
+
+  return a === b ? 0 : a > b ? 1 : -1
+}
+
+const isString = (x: any): x is string => typeof x === 'string'
