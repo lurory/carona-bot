@@ -9,7 +9,7 @@ import {
   sendAdminMessageToGroup
 } from '../utils/bot.js'
 import RideManager from './rideManager.js'
-import { getCurrentTime } from '../utils/date'
+import { getCurrentTime } from '../utils/date.js'
 import { getHelpMessage } from '../utils/messages.js'
 
 let token: string

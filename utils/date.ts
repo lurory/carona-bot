@@ -1,4 +1,4 @@
-import { timeRegexPattern } from "./const"
+import { timeRegexPattern } from "./const.js"
 
 export const getCurrentTime = () => {
   const dateStr = new Date().toLocaleString('en-US', { timeZone: 'America/Sao_Paulo' })
