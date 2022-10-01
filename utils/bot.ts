@@ -165,18 +165,18 @@ const setRideDateAndTime = (now: Date, rideTime: string[], isToday: boolean) => 
   return rideDateAndTime
 }
 
-const getRideInfo = (fields: string[]) => {
+const getRideInfo = (params: string[]) => {
   let isToday = false
   let time
   let description
 
-  if (fields[1].trim() === 'hoje') {
+  if (params[0].trim() === 'hoje') {
     isToday = true
-    time = fields[2]
-    description = fields.slice(3, fields.length).join(' ')
+    time = params[1]
+    description = params.slice(2, params.length).join(' ')
   } else {
-    time = fields[1]
-    description = fields.slice(2, fields.length).join(' ')
+    time = params[0]
+    description = params.slice(1, params.length).join(' ')
   }
 
   return [isToday, time, description] as const
