@@ -2,13 +2,12 @@ import { MongoClient, Collection, Db, InsertOneResult, Filter, Document } from '
 import { MONGO_URL, MONGO_COLLECTION_NAME } from '../utils/const.js'
 import { Group } from '../typings/ride.js'
 
-export default class Database {
+export class Database {
   _client: MongoClient
-  _collection: Collection
+  _collection: Collection | undefined
 
   constructor() {
     this._client = new MongoClient(MONGO_URL)
-    this._collection = new Collection()
   }
 
   connect = () => {
@@ -35,10 +34,10 @@ export default class Database {
     })
 
   scrapeGroupRides = (chatId: number): Promise<Group[]> =>
-    this._collection.find({ chatId: chatId }).toArray() as Promise<unknown> as Promise<Group[]>
+    this._collection?.find({ chatId: chatId }).toArray() as Promise<unknown> as Promise<Group[]>
 
   getRide = async (filter: Filter<Document>): Promise<unknown[]> => {
-    const document = await this._collection.find(filter).toArray()
+    const document = await this._collection?.find(filter).toArray()
 
     if (!document) {
       throw Error('not found')
@@ -47,8 +46,8 @@ export default class Database {
     return document
   }
 
-  createGroup = (newGroup: Group): Promise<InsertOneResult<Document>> =>
-    this._collection.insertOne(newGroup)
+  createGroup = (newGroup: Group): Promise<InsertOneResult<Document>> | undefined =>
+    this._collection?.insertOne(newGroup)
 
   updateGroup = async (
     chatId: number,
@@ -58,7 +57,7 @@ export default class Database {
     }
   ): Promise<boolean> => {
     let wasMofidied = false
-    let result = await this._collection.updateOne({ chatId: chatId }, mutation, options)
+    let result = await this._collection?.updateOne({ chatId: chatId }, mutation, options)
     wasMofidied = (result?.modifiedCount as number) > 0
     console.log(result?.modifiedCount + ' element(s) modified.')
 
