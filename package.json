@@ -9,7 +9,7 @@
     "clean": "tsc --build --clean",
     "start": "node ./bin/index.js",
     "dev": "ts-node --esm index.ts",
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest -c jest.config.ts",
     "stop": "pkill --signal SIGINT caronaBot",
     "prettier-format": "prettier --config .prettierrc 'src/**/*.ts' --write",
     "switch_to_dev": "export $(cat .env | xargs) && wget --spider https://api.telegram.org/bot$TOKEN/setWebhook?url= --delete-after && node index.js"
@@ -26,10 +26,12 @@
   "devDependencies": {
     "@types/co-body": "^0.0.3",
     "@types/express": "^4.17.14",
-    "@types/jest": "^24.0.18",
+    "@types/jest": "^29.1.1",
     "@types/node": "^12.0.0",
     "@types/node-telegram-bot-api": "^0.57.1",
     "@types/ramda": "types/npm-ramda#dist",
+    "jest": "^29.1.2",
+    "ts-jest": "^29.0.3",
     "ts-node": "^10.9.1",
     "typescript": "^4.7.2"
   }
