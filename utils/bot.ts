@@ -1,9 +1,10 @@
 import Bot from 'node-telegram-bot-api'
 
 import { adminUsers } from './const.js'
-import { validateTimeFormat } from './date.js'
+import { getCurrentTime, validateTimeFormat } from './date.js'
 import { createFullRideMessage, getWrongTimeFormatMessage } from './messages.js'
 import bot from '../src/bot.js'
+import { Group, GroupRides, Ride } from '../typings/ride.js'
 
 export const parseFieldsFromMessage = (message: string) => {
   const [command, ...params] = message.split(' ')
@@ -140,6 +141,15 @@ export const sendAdminMessageToGroup = async (user: Bot.User, params: Array<stri
     const groupId = params[1]
     bot.telegram.sendMessage(groupId, params.slice(2, params.length).join(' '))
   }
+}
+
+export const ridesToArray = (group: Group) => {
+  const ridesByDirection = { going: group['going'], coming: group['coming'] }
+
+  return Object.keys(ridesByDirection).reduce(function (res: Ride[], v: string) {
+    const ridesInADirection = ridesByDirection[v as keyof GroupRides]
+    return ridesInADirection ? res.concat(Object.values(ridesInADirection)) : res
+  }, [])
 }
 
 const getPureCommand = (command: string) => {

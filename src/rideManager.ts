@@ -1,5 +1,9 @@
-import { Group, Ride } from '../typings/ride'
 import Bot from 'node-telegram-bot-api'
+
+import { Group, Ride } from '../typings/ride'
+
+import { compareValues } from './../utils/format.js'
+import { ridesToArray } from './../utils/bot.js'
 import { Database } from './database.js'
 import { weekdays, emojis } from '../utils/const.js'
 import * as format from '../utils/format.js'
@@ -67,10 +71,10 @@ export default class RideManager {
     const docs = await this.db.scrapeGroupRides(chatId)
     if (docs.length === 0) return
 
-    // If it exists, it gets only the first document, because
-    // the chat id is unique
-    const rides = { ...docs[0]['going'], ...docs[0]['coming'] }
-    const ridesToRemove = Object.values(rides).filter((ride: Ride) => ride.time < now)
+    const group = docs[0] as Group
+    const rides = ridesToArray(group)
+
+    const ridesToRemove = rides.filter((ride: Ride) => ride.time < now)
 
     let ridesToApply: { [x: string]: string } = {}
     for (const ride of ridesToRemove) {
@@ -92,19 +96,20 @@ export default class RideManager {
 
     if (result.length === 0) return ''
 
-    let group = result[0] as Group
-    const comingRides = group.coming !== undefined ? Object.values(group.coming) : []
-    const goingRides = group.going !== undefined ? Object.values(group.going) : []
-    let totalRides = comingRides.concat(goingRides)
+    const group = result[0] as Group
+    let rides = ridesToArray(group)
 
     //It sorts by day/month, then direction, then time
-    totalRides.sort(
-      (a, b) =>
-        ((new Date(a.time).setHours(0, 0, 0) <
-          new Date(b.time).setHours(0, 0, 0)) as unknown as number) ||
-        b.direction.localeCompare(a.direction) ||
-        ((new Date(a.time) < new Date(b.time)) as unknown as number)
-    )
+    rides.sort((a, b) => {
+      return (
+        compareValues(
+          new Date(a.time).setHours(0, 0, 0, 0),
+          new Date(b.time).setHours(0, 0, 0, 0)
+        ) ||
+        compareValues(a.direction, b.direction) ||
+        compareValues(new Date(a.time), new Date(b.time))
+      )
+    })
 
     // Auxiliary variables
     let message = ''
@@ -115,7 +120,7 @@ export default class RideManager {
 
     // Assemble the message while iterating over the
     // rides array
-    totalRides.forEach((ride) => {
+    rides.forEach((ride) => {
       date = new Date(ride.time)
       hours = date.getHours()
       minutes = date.getMinutes()
