@@ -1,6 +1,6 @@
 import { Group, Ride } from '../typings/ride'
 import Bot from 'node-telegram-bot-api'
-import Database from './database.js'
+import { Database } from './database.js'
 import { weekdays, emojis } from '../utils/const.js'
 import * as format from '../utils/format.js'
 import { getUserLink } from '../utils/messages.js'
