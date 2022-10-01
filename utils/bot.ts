@@ -54,7 +54,7 @@ export const handleNewRide = async (
       reply_to_message_id: messageId
     })
 
-  await listRides(chatId, now)
+  await listRides(chatId)
 }
 
 export const handleExistingRide = async (
@@ -85,11 +85,13 @@ export const handleExistingRide = async (
   bot.telegram.sendMessage(chatId, replyMsg, {
     reply_to_message_id: messageId
   })
+
+  await listRides(chatId)
 }
 
-export const listRides = async (chatId: number, now: Date) => {
-  // Clean old rides
-  await bot.manager.cleanRides(chatId, now)
+export const listRides = async (chatId: number) => {
+  const currentTime = getCurrentTime()
+  await bot.manager.cleanRides(chatId, currentTime)
 
   bot.manager.listRidesAsString(chatId).then((msg: string) => {
     msg != ''
@@ -122,11 +124,7 @@ export const handleRemoveRide = async (
       reply_to_message_id: messageId
     })
 
-    bot.manager.listRidesAsString(chatId).then((msg: string) => {
-      msg != ''
-        ? bot.telegram.sendMessage(chatId, msg, { parse_mode: 'HTML' })
-        : bot.telegram.sendMessage(chatId, 'Nenhuma carona cadastrada até o momento.')
-    })
+    await listRides(chatId)
   } else
     bot.telegram.sendMessage(
       chatId,
