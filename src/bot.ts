@@ -16,7 +16,7 @@ let tgBot: Bot
 if (process.env.NODE_ENV === 'production') {
   token = process.env.TOKEN as string
   tgBot = new Bot(token)
-  tgBot.setWebHook(process.env.HEROKU_URL + token)
+  tgBot.setWebHook(`${process.env.APP_URL}/bot${token}`)
 } else {
   token = process.env.TOKEN_DEV as string
   tgBot = new Bot(token, { polling: true })
@@ -215,4 +215,4 @@ const sendAdminMessageToGroup = async (user: Bot.User, params: Array<string>) =>
   }
 }
 
-export default tgBot
+export { tgBot, token }

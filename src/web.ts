@@ -1,6 +1,9 @@
+import Bot from 'node-telegram-bot-api'
 import express, { Request, Response } from 'express'
 import { AddressInfo } from 'net'
 import bodyParser from 'body-parser'
+
+import { token } from './bot.js'
 
 const port = process.env.PORT || '80'
 const app = express()
@@ -22,8 +25,9 @@ function isAddressInfo(info: string | AddressInfo | null): info is AddressInfo {
   return (info as AddressInfo).address !== undefined
 }
 
-export default (bot: any) => {
-  app.post('/' + bot.token, (req: Request, res: Response) => {
+export default (bot: Bot) => {
+  app.post(`/bot${token}`, (req: Request, res: Response) => {
+    console.log('token: ', token)
     bot.processUpdate(req.body)
     res.sendStatus(200)
   })
