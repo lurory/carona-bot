@@ -27,7 +27,6 @@ function isAddressInfo(info: string | AddressInfo | null): info is AddressInfo {
 
 export default (bot: Bot) => {
   app.post(`/bot${token}`, (req: Request, res: Response) => {
-    console.log('token: ', token)
     bot.processUpdate(req.body)
     res.sendStatus(200)
   })
