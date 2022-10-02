@@ -1,14 +1,14 @@
 import Bot from 'node-telegram-bot-api'
 
-import { getRideInfo, parseFieldsFromMessage, setRideDateAndTime } from './utils/bot.js'
 import RideManager from './rideManager.js'
-import { getCurrentTime, validateTimeFormat } from './utils/date.js'
-import {
-  createFullRideMessage,
-  getHelpMessage,
-  getWrongTimeFormatMessage
-} from './utils/messages.js'
+import { getRideInfo, parseFieldsFromMessage, setRideDate } from './utils/bot.js'
+import { parseHoursMinutes, getCurrentTime } from './utils/date.js'
 import { adminUsers } from './utils/const.js'
+import {
+  getHelpMessage,
+  getWrongTimeFormatMessage,
+  createFullRideMessage
+} from './utils/messages.js'
 
 let token: string
 let tgBot: Bot
@@ -33,12 +33,11 @@ tgBot.on('text', async (msg) => {
   const user = msg.from as Bot.User
   const messageId = msg.message_id
   const { command, params } = parseFieldsFromMessage(msg.text)
-  const currentTime = getCurrentTime()
 
   switch (command) {
     case '/ida':
     case '/volta':
-      await handleNewRide(command, chatId, messageId, user, currentTime, params)
+      await handleNewRide(command, chatId, messageId, user, params)
       break
 
     case '/lotou':
@@ -92,7 +91,6 @@ const handleNewRide = async (
   chatId: number,
   messageId: number,
   user: Bot.User,
-  now: Date,
   options: Array<string>
 ) => {
   if (options.length < 2) {
@@ -104,16 +102,18 @@ const handleNewRide = async (
   }
 
   const [isToday, time, description] = getRideInfo(options)
-  const [isTimeFormatValid, rideTime] = validateTimeFormat(time)
+  console.log(`Time: ${time}`)
+  const { hours, minutes } = parseHoursMinutes(time) || {}
 
-  if (!isTimeFormatValid) {
+  if (!hours) {
     tgBot.sendMessage(chatId, getWrongTimeFormatMessage(command), {
       reply_to_message_id: messageId
     })
     return
   }
 
-  const rideDate = setRideDateAndTime(now, rideTime, isToday)
+  const rideDate = setRideDate(hours, minutes, isToday)
+  console.log(`rideDate: ${rideDate}`)
 
   let wasModified = await rideManager.addRide(chatId, {
     user,

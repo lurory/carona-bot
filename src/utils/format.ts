@@ -4,8 +4,7 @@ import { User } from 'node-telegram-bot-api'
 export const strikeThrough = (text: string): string => `<s>${text}</s>`
 
 // Function to zero pad hour or minute strings
-export const addZeroPadding = (time: number): string =>
-  time < 10 ? String(time).padStart(2, '0') : time.toString()
+export const addZeroPadding = (time: number): string => String(time).padStart(2, '0')
 
 export const getUserEmoji = (user: User): string => {
   return user.username ? specialUsers.get(user.username) || '' : ''
@@ -31,10 +30,14 @@ export const getSpecialDayEmoji = (day: number, month: number): string => {
 
 export const compareValues = (a: string | number | Date, b: string | number | Date): number => {
   if (isString(a) && isString(b)) {
-    return b.localeCompare(a)
+    return a.localeCompare(b)
+  }
+
+  if (a instanceof Date && b instanceof Date) {
+    return a.getTime() === b.getTime() ? 0 : a.getTime() > b.getTime() ? 1 : -1
   }
 
   return a === b ? 0 : a > b ? 1 : -1
 }
 
-const isString = (x: any): x is string => typeof x === 'string'
+export const isString = (x: any): x is string => typeof x === 'string' || x instanceof String

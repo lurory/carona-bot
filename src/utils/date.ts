@@ -1,4 +1,4 @@
-import { timeRegexPattern } from "./const.js"
+import { timeRegexPattern } from './const.js'
 
 export const getCurrentTime = () => {
   const dateStr = new Date().toLocaleString('en-US', { timeZone: 'America/Sao_Paulo' })
@@ -8,9 +8,9 @@ export const getCurrentTime = () => {
   return new Date(dateStr)
 }
 
-export const validateTimeFormat = (time: string) => {
+export const parseHoursMinutes = (time: string) => {
   let matches = timeRegexPattern.exec(time)
-  if (!matches) return [false, null] as const
+  if (!matches) return null
 
-  return [true, matches] as const
+  return { hours: parseInt(matches[1]), minutes: parseInt(matches[2]) } as const
 }

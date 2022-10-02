@@ -93,6 +93,7 @@ export default class RideManager {
 
   public async listRidesAsString(chatId: number): Promise<string> {
     let result = await this.db.scrapeGroupRides(chatId)
+    console.log(JSON.stringify(result))
 
     if (result.length === 0) return ''
 
@@ -106,7 +107,7 @@ export default class RideManager {
           new Date(a.time).setHours(0, 0, 0, 0),
           new Date(b.time).setHours(0, 0, 0, 0)
         ) ||
-        compareValues(a.direction, b.direction) ||
+        compareValues(a.direction, b.direction) * -1 ||
         compareValues(new Date(a.time), new Date(b.time))
       )
     })
