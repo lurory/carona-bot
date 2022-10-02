@@ -1,4 +1,4 @@
-export const MONGO_URL = `mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASSW}@cluster0-bnobp.mongodb.net/test?retryWrites=true&w=majority`
+export const MONGO_URL = `mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASSW}@cluster0-bnobp.mongodb.net/${process.env.DB_NAME}?retryWrites=true&w=majority`
 
 export const MONGO_COLLECTION_NAME: string = 'carona-bot'
 
