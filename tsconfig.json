@@ -3,7 +3,6 @@
     "types": ["node", "jest"],
     "typeRoots": ["node_modules/@types"],
     "outDir": "bin",
-    // "module": "ESNext",
     "module": "ESNext",
     "moduleResolution": "node",
     "allowJs": false,
