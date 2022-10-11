@@ -11,11 +11,7 @@ export class Database {
   }
 
   connect = () => {
-    this._client.connect((err: any, _: any) => {
-      if (err) throw err
-      console.log('Connected to the MongoDB')
-    })
-
+    this._client.connect().finally(() => console.log('Connected to the MongoDB'))
     const db: Db = this._client.db(process.env.DB_NAME)
 
     const ridesCollection: Collection = db.collection(MONGO_COLLECTION_NAME)
@@ -28,10 +24,10 @@ export class Database {
   }
 
   disconnect = () =>
-    this._client.close((err: any, _: any) => {
-      if (err) throw err
-      console.log('Closed the MongoDB connection')
-    })
+    this._client.close().then(
+      () => console.log('Closed connection with MongoDB'),
+      (reason: any) => console.log(`Close connection was unsuccessfull. Reason: ${reason}`)
+    )
 
   scrapeGroupRides = (chatId: number): Promise<Group[]> =>
     this._collection?.find({ chatId: chatId }).toArray() as Promise<unknown> as Promise<Group[]>

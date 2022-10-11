@@ -56,7 +56,7 @@ export default class RideManager {
     chatId: number,
     rideInfo: { userId: number; direction: string; state: number }
   ): Promise<boolean> {
-    return await this.db.updateGroup(
+    return this.db.updateGroup(
       chatId,
       {
         $set: {
