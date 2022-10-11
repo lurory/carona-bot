@@ -26,7 +26,7 @@ export const createFullRideMessage = (
 ) => {
   return wasSuccessful
     ? `Estado da sua carona de ${params.direction} alterado.`
-    : `, você não possui uma ${params.userFirstName} cadastrada.`
+    : `, ou você não possui uma ${params.userFirstName} cadastrada, ou já passou do horário cadastrado.`
 }
 
 export const getUserLink = (id: number, name: string, lastName: string): string =>

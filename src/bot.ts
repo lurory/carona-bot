@@ -113,6 +113,8 @@ const handleNewRide = async (
     return
   }
 
+  await cleanRides(chatId)
+
   const rideDate = setRideDateAndTime(now, rideTime, isToday)
 
   let wasModified = await rideManager.addRide(chatId, {
@@ -146,6 +148,8 @@ const handleExistingRide = async (
     return
   }
 
+  await cleanRides(chatId)
+
   const [direction] = options
 
   let success = await rideManager.setRideFull(chatId, {
@@ -163,18 +167,20 @@ const handleExistingRide = async (
     reply_to_message_id: messageId
   })
 
-  await listRides(chatId)
+  listRides(chatId)
 }
 
 const listRides = async (chatId: number) => {
-  const currentTime = getCurrentTime()
-  await rideManager.cleanRides(chatId, currentTime)
-
   rideManager.listRidesAsString(chatId).then((msg: string) => {
     msg != ''
       ? tgBot.sendMessage(chatId, msg, { parse_mode: 'HTML' })
       : tgBot.sendMessage(chatId, 'Nenhuma carona cadastrada até o momento.')
   })
+}
+
+const cleanRides = async (chatId: number) => {
+  const currentTime = getCurrentTime()
+  await rideManager.cleanRides(chatId, currentTime)
 }
 
 const handleRemoveRide = async (
@@ -188,6 +194,8 @@ const handleRemoveRide = async (
     tgBot.sendMessage(chatId, command + ' ida/volta')
     return
   }
+
+  await cleanRides(chatId)
 
   const [direction] = options
 
