@@ -60,7 +60,7 @@ tgBot.on('text', async (msg) => {
       break
 
     case '/say':
-      sendAdminMessageToGroup(user, params)
+      await sendAdminMessageToGroup(user, params)
       break
 
     default:
@@ -173,16 +173,15 @@ const handleExistingRide = async (
     reply_to_message_id: messageId
   })
 
-  listRides(chatId)
+  await listRides(chatId)
 }
 
-const listRides = async (chatId: number) => {
+const listRides = async (chatId: number) =>
   rideManager.listRidesAsString(chatId).then((msg: string) => {
     msg != ''
       ? tgBot.sendMessage(chatId, msg, { parse_mode: 'HTML' })
       : tgBot.sendMessage(chatId, 'Nenhuma carona cadastrada até o momento.')
   })
-}
 
 const cleanRides = async (chatId: number) => await rideManager.cleanRides(chatId, getCurrentTime())
 
