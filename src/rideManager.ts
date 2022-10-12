@@ -164,7 +164,7 @@ export default class RideManager {
 
       // If it is full, generate strikethrough text.
       if (ride.full === 1) {
-        rideInfo = ride.user?.first_name + ' ' + (ride.user.last_name || '') + rideInfo
+        rideInfo = ride.user?.first_name + ' ' + (ride.user?.last_name || '') + rideInfo
         message += format.strikeThrough(rideInfo) + '\n'
       }
       // If it is not, create a link for the user.
@@ -172,7 +172,7 @@ export default class RideManager {
         rideInfo =
           format.getUserEmoji(ride.user) +
           ' ' +
-          getUserLink(ride.user.id, ride.user.first_name, ride.user.last_name) +
+          getUserLink(ride.user?.id, ride.user?.first_name, ride.user?.last_name) +
           rideInfo
         message += rideInfo + '\n'
       }
