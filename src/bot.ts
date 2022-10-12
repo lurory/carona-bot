@@ -177,13 +177,13 @@ const handleExistingRide = async (
 }
 
 const listRides = async (chatId: number) =>
-  rideManager.listRidesAsString(chatId).then((msg: string) => {
+  await rideManager.listRidesAsString(chatId).then((msg: string) => {
     msg != ''
       ? tgBot.sendMessage(chatId, msg, { parse_mode: 'HTML' })
       : tgBot.sendMessage(chatId, 'Nenhuma carona cadastrada até o momento.')
   })
 
-const cleanRides = async (chatId: number) => await rideManager.cleanRides(chatId, getCurrentTime())
+const cleanRides = async (chatId: number) => rideManager.cleanRides(chatId, getCurrentTime())
 
 const handleRemoveRide = async (
   command: string,
