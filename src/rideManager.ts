@@ -89,6 +89,8 @@ export default class RideManager {
       },
       { upsert: false }
     )
+
+    return ridesToApply
   }
 
   public async listRidesAsString(chatId: number): Promise<string> {

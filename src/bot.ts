@@ -148,15 +148,21 @@ const handleExistingRide = async (
     return
   }
 
-  await cleanRides(chatId)
-
+  const removedRides = await cleanRides(chatId)
   const [direction] = options
+  const directionField = direction === 'ida' ? 'going' : 'coming'
 
-  let success = await rideManager.setRideFull(chatId, {
-    userId: user.id,
-    direction: options[0] === 'ida' ? 'going' : 'coming',
-    state: command === '/lotou' ? 1 : 0
-  })
+  let success: boolean
+
+  if (removedRides && removedRides[`${directionField}.${user.id}`] === '') {
+    success = false
+  } else {
+    success = await rideManager.setRideFull(chatId, {
+      userId: user.id,
+      direction: directionField,
+      state: command === '/lotou' ? 1 : 0
+    })
+  }
 
   const replyMsg = createFullRideMessage(success, {
     direction,
@@ -178,10 +184,7 @@ const listRides = async (chatId: number) => {
   })
 }
 
-const cleanRides = async (chatId: number) => {
-  const currentTime = getCurrentTime()
-  await rideManager.cleanRides(chatId, currentTime)
-}
+const cleanRides = async (chatId: number) => await rideManager.cleanRides(chatId, getCurrentTime())
 
 const handleRemoveRide = async (
   command: string,
