@@ -173,7 +173,7 @@ const handleExistingRide = async (
     reply_to_message_id: messageId
   })
 
-  await listRides(chatId)
+  if (success) await listRides(chatId)
 }
 
 const listRides = async (chatId: number) =>
