@@ -56,7 +56,7 @@ export default class RideManager {
     chatId: number,
     rideInfo: { userId: number; direction: string; state: number }
   ): Promise<boolean> {
-    return await this.db.updateGroup(
+    return this.db.updateGroup(
       chatId,
       {
         $set: {
@@ -89,6 +89,8 @@ export default class RideManager {
       },
       { upsert: false }
     )
+
+    return ridesToApply
   }
 
   public async listRidesAsString(chatId: number): Promise<string> {
@@ -162,7 +164,7 @@ export default class RideManager {
 
       // If it is full, generate strikethrough text.
       if (ride.full === 1) {
-        rideInfo = ride.user.first_name + ' ' + (ride.user.last_name || '') + rideInfo
+        rideInfo = ride.user?.first_name + ' ' + (ride.user.last_name || '') + rideInfo
         message += format.strikeThrough(rideInfo) + '\n'
       }
       // If it is not, create a link for the user.

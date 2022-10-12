@@ -60,7 +60,7 @@ tgBot.on('text', async (msg) => {
       break
 
     case '/say':
-      sendAdminMessageToGroup(user, params)
+      await sendAdminMessageToGroup(user, params)
       break
 
     default:
@@ -113,6 +113,8 @@ const handleNewRide = async (
     return
   }
 
+  await cleanRides(chatId)
+
   const rideDate = setRideDateAndTime(now, rideTime, isToday)
 
   let wasModified = await rideManager.addRide(chatId, {
@@ -146,13 +148,21 @@ const handleExistingRide = async (
     return
   }
 
+  const removedRides = await cleanRides(chatId)
   const [direction] = options
+  const directionField = direction === 'ida' ? 'going' : 'coming'
 
-  let success = await rideManager.setRideFull(chatId, {
-    userId: user.id,
-    direction: options[0] === 'ida' ? 'going' : 'coming',
-    state: command === '/lotou' ? 1 : 0
-  })
+  let success: boolean
+
+  if (removedRides && removedRides[`${directionField}.${user.id}`] === '') {
+    success = false
+  } else {
+    success = await rideManager.setRideFull(chatId, {
+      userId: user.id,
+      direction: directionField,
+      state: command === '/lotou' ? 1 : 0
+    })
+  }
 
   const replyMsg = createFullRideMessage(success, {
     direction,
@@ -166,16 +176,14 @@ const handleExistingRide = async (
   await listRides(chatId)
 }
 
-const listRides = async (chatId: number) => {
-  const currentTime = getCurrentTime()
-  await rideManager.cleanRides(chatId, currentTime)
-
+const listRides = async (chatId: number) =>
   rideManager.listRidesAsString(chatId).then((msg: string) => {
     msg != ''
       ? tgBot.sendMessage(chatId, msg, { parse_mode: 'HTML' })
       : tgBot.sendMessage(chatId, 'Nenhuma carona cadastrada até o momento.')
   })
-}
+
+const cleanRides = async (chatId: number) => await rideManager.cleanRides(chatId, getCurrentTime())
 
 const handleRemoveRide = async (
   command: string,
@@ -188,6 +196,8 @@ const handleRemoveRide = async (
     tgBot.sendMessage(chatId, command + ' ida/volta')
     return
   }
+
+  await cleanRides(chatId)
 
   const [direction] = options
 
