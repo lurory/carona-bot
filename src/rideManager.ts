@@ -3,7 +3,7 @@ import Bot from 'node-telegram-bot-api'
 import { Group, Ride } from '../typings/ride'
 
 import { compareValues } from './utils/format.js'
-import { ridesToArray } from './utils/bot.js'
+import { ridesToArray, ridesToObject } from './utils/bot.js'
 import { Database } from './database.js'
 import { weekdays, emojis } from './utils/const.js'
 import * as format from './utils/format.js'
@@ -76,11 +76,7 @@ export default class RideManager {
 
     const ridesToRemove = rides.filter((ride: Ride) => ride.time < now)
 
-    let ridesToApply: { [x: string]: string } = {}
-    for (const ride of ridesToRemove) {
-      const key: string = `${ride.direction}.${ride.user.id}`
-      ridesToApply[key] = ''
-    }
+    const ridesToApply = ridesToObject(ridesToRemove)
 
     this.db.updateGroup(
       chatId,
