@@ -180,7 +180,7 @@ const handleExistingRide = async (
 
   const replyMsg = createFullRideMessage(success, {
     direction,
-    userFirstName: user?.first_name
+    userFirstName: user.first_name
   })
 
   tgBot.sendMessage(chatId, replyMsg, {

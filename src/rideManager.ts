@@ -126,6 +126,9 @@ export default class RideManager {
       month = date.getMonth() + 1
       weekday = weekdays.pt_br[date.getDay()]
 
+      // Avoid problems when accessing the user
+      if (!ride.user) return
+
       // Check if day/month changed to print a new line
       if (!previousDate || previousDate !== date.toDateString()) {
         changedDate = true
@@ -160,7 +163,7 @@ export default class RideManager {
 
       // If it is full, generate strikethrough text.
       if (ride.full === 1) {
-        rideInfo = ride.user?.first_name + ' ' + (ride.user?.last_name || '') + rideInfo
+        rideInfo = ride.user.first_name + ' ' + (ride.user.last_name || '') + rideInfo
         message += format.strikeThrough(rideInfo) + '\n'
       }
       // If it is not, create a link for the user.
@@ -168,7 +171,7 @@ export default class RideManager {
         rideInfo =
           format.getUserEmoji(ride.user) +
           ' ' +
-          getUserLink(ride.user?.id, ride.user?.first_name, ride.user?.last_name) +
+          getUserLink(ride.user.id, ride.user.first_name, ride.user.last_name) +
           rideInfo
         message += rideInfo + '\n'
       }
