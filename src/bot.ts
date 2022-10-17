@@ -1,6 +1,12 @@
 import Bot from 'node-telegram-bot-api'
 
-import { getRideInfo, parseFieldsFromMessage, setRideDateAndTime } from './utils/bot.js'
+import {
+  getRideInfo,
+  parseFieldsFromMessage,
+  ridesToObject,
+  setRideDateAndTime
+} from './utils/bot.js'
+import { getDifference } from './utils/array.js'
 import RideManager from './rideManager.js'
 import { getCurrentTime, validateTimeFormat } from './utils/date.js'
 import {
@@ -9,6 +15,7 @@ import {
   getWrongTimeFormatMessage
 } from './utils/messages.js'
 import { adminUsers } from './utils/const.js'
+import { Ride } from '../typings/ride'
 
 let token: string
 let tgBot: Bot
@@ -148,20 +155,27 @@ const handleExistingRide = async (
     return
   }
 
-  const removedRides = await cleanRides(chatId)
+  const groupRides = await cleanRides(chatId)
   const [direction] = options
   const directionField = direction === 'ida' ? 'going' : 'coming'
 
   let success: boolean
 
-  if (removedRides && removedRides[`${directionField}.${user.id}`] === '') {
-    success = false
-  } else {
+  const remainRides = getDifference(
+    groupRides?.rides as Ride[],
+    groupRides?.ridesToRemove as Ride[]
+  )
+
+  const remainRidesObj = ridesToObject(remainRides)
+
+  if (remainRidesObj && remainRidesObj[`${directionField}.${user.id}`] === '') {
     success = await rideManager.setRideFull(chatId, {
       userId: user.id,
       direction: directionField,
       state: command === '/lotou' ? 1 : 0
     })
+  } else {
+    success = false
   }
 
   const replyMsg = createFullRideMessage(success, {
