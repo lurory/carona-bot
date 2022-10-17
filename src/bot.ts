@@ -8,7 +8,7 @@ import {
 } from './utils/bot.js'
 import { getDifference } from './utils/array.js'
 import RideManager from './rideManager.js'
-import { getCurrentTime, validateTimeFormat } from './utils/date.js'
+import { getCurrentTime, sleep, validateTimeFormat } from './utils/date.js'
 import {
   createFullRideMessage,
   getHelpMessage,
@@ -140,6 +140,7 @@ const handleNewRide = async (
       reply_to_message_id: messageId
     })
 
+  await sleep(1500)
   await listRides(chatId)
 }
 
@@ -187,7 +188,10 @@ const handleExistingRide = async (
     reply_to_message_id: messageId
   })
 
-  if (success) await listRides(chatId)
+  if (success) {
+    await sleep(1500)
+    await listRides(chatId)
+  }
 }
 
 const listRides = async (chatId: number) =>
@@ -225,6 +229,7 @@ const handleRemoveRide = async (
       reply_to_message_id: messageId
     })
 
+    await sleep(1500)
     await listRides(chatId)
   } else
     tgBot.sendMessage(chatId, `${user.first_name}, você não possui uma ${direction} cadastrada.`, {
