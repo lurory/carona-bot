@@ -47,6 +47,7 @@ tgBot.on('text', async (msg) => {
       break
 
     case '/lista':
+      await cleanRides(chatId)
       await listRides(chatId)
       break
 
