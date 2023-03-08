@@ -1,11 +1,11 @@
 import { timeRegexPattern } from './const.js'
 
 export const getCurrentTime = () => {
-  const dateStr = new Date().toLocaleString('en-US', { timeZone: 'America/Sao_Paulo' })
-  //Fixing daylight saving time bug for now
-  // now.setHours(now.getHours() - 1)
+  const d = new Date()
 
-  return new Date(dateStr)
+  //TODO: Remove hardcoded Brasilia timezone
+  d.setTime(d.getTime() + d.getTimezoneOffset() * 60 * 1000 - 3 * 60 * 60 * 1000)
+  return new Date(d)
 }
 
 export const validateTimeFormat = (time: string) => {
