@@ -24,7 +24,7 @@ export const unsetRides = (rides: Ride[]) => {
 }
 
 export const setRideDateAndTime = (now: Date, rideTime: string[], isToday: boolean) => {
-  let rideDateAndTime = new Date(now.valueOf())
+  let rideDateAndTime = new Date()
   rideDateAndTime.setSeconds(0)
   rideDateAndTime.setHours(parseInt(rideTime[1]))
 
