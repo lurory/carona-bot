@@ -1,4 +1,4 @@
-import { timeRegexPattern } from "./const.js"
+import { timeRegexPattern } from './const.js'
 
 export const getCurrentTime = () => {
   const dateStr = new Date().toLocaleString('en-US', { timeZone: 'America/Sao_Paulo' })
@@ -14,3 +14,5 @@ export const validateTimeFormat = (time: string) => {
 
   return [true, matches] as const
 }
+
+export const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms))

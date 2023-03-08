@@ -14,11 +14,13 @@ export const ridesToArray = (group: Group) => {
   }, [])
 }
 
-const getPureCommand = (command: string) => {
-  if (command.indexOf('@carona_v2_bot') > -1) {
-    return command.split('@')[0].toLowerCase()
+export const unsetRides = (rides: Ride[]) => {
+  let ridesObj: { [x: string]: string } = {}
+  for (const ride of rides) {
+    const key: string = `${ride.direction}.${ride.user.id}`
+    ridesObj[key] = ''
   }
-  return command.toLowerCase()
+  return ridesObj
 }
 
 export const setRideDateAndTime = (now: Date, rideTime: string[], isToday: boolean) => {
@@ -50,4 +52,11 @@ export const getRideInfo = (params: string[]) => {
   }
 
   return [isToday, time, description] as const
+}
+
+const getPureCommand = (command: string) => {
+  if (command.indexOf('@carona_v2_bot') > -1) {
+    return command.split('@')[0].toLowerCase()
+  }
+  return command.toLowerCase()
 }

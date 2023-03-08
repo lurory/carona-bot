@@ -2,13 +2,14 @@ import Bot from 'node-telegram-bot-api'
 
 import { getRideInfo, parseFieldsFromMessage, setRideDateAndTime } from './utils/bot.js'
 import RideManager from './rideManager.js'
-import { getCurrentTime, validateTimeFormat } from './utils/date.js'
+import { getCurrentTime, sleep, validateTimeFormat } from './utils/date.js'
 import {
   createFullRideMessage,
   getHelpMessage,
   getWrongTimeFormatMessage
 } from './utils/messages.js'
 import { adminUsers } from './utils/const.js'
+import { Ride } from '../typings/ride.js'
 
 let token: string
 let tgBot: Bot
@@ -134,6 +135,7 @@ const handleNewRide = async (
       reply_to_message_id: messageId
     })
 
+  await sleep(1500)
   await listRides(chatId)
 }
 
@@ -149,32 +151,38 @@ const handleExistingRide = async (
     return
   }
 
-  const removedRides = await cleanRides(chatId)
+  const groupRides = await cleanRides(chatId)
   const [direction] = options
   const directionField = direction === 'ida' ? 'going' : 'coming'
 
   let success: boolean
 
-  if (removedRides && removedRides[`${directionField}.${user.id}`] === '') {
-    success = false
-  } else {
+  const userRideInDirection = groupRides.filter(
+    (ride: Ride) => ride.user.id === user.id && ride.direction === directionField
+  )
+  if (userRideInDirection.length) {
     success = await rideManager.setRideFull(chatId, {
       userId: user.id,
       direction: directionField,
       state: command === '/lotou' ? 1 : 0
     })
+  } else {
+    success = false
   }
 
   const replyMsg = createFullRideMessage(success, {
     direction,
-    userFirstName: user?.first_name
+    userFirstName: user.first_name
   })
 
   tgBot.sendMessage(chatId, replyMsg, {
     reply_to_message_id: messageId
   })
 
-  if (success) await listRides(chatId)
+  if (success) {
+    await sleep(1500)
+    await listRides(chatId)
+  }
 }
 
 const listRides = async (chatId: number) =>
@@ -212,6 +220,7 @@ const handleRemoveRide = async (
       reply_to_message_id: messageId
     })
 
+    await sleep(1500)
     await listRides(chatId)
   } else
     tgBot.sendMessage(chatId, `${user.first_name}, você não possui uma ${direction} cadastrada.`, {
