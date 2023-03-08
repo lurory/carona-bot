@@ -30,6 +30,8 @@ export const setRideDateAndTime = (now: Date, rideTime: string[], isToday: boole
 
   rideTime[2] ? rideDateAndTime.setMinutes(parseInt(rideTime[2])) : rideDateAndTime.setMinutes(0)
 
+  console.log(rideTime, now)
+
   // If the "today" flag is not present and the ride hour/minute is before
   // the current time.
   if (!isToday && rideDateAndTime < now) rideDateAndTime.setDate(rideDateAndTime.getDate() + 1)
