@@ -1,12 +1,6 @@
 import Bot from 'node-telegram-bot-api'
 
-import {
-  getRideInfo,
-  parseFieldsFromMessage,
-  ridesToObject,
-  setRideDateAndTime
-} from './utils/bot.js'
-import { getDifference } from './utils/array.js'
+import { getRideInfo, parseFieldsFromMessage, setRideDateAndTime } from './utils/bot.js'
 import RideManager from './rideManager.js'
 import { getCurrentTime, sleep, validateTimeFormat } from './utils/date.js'
 import {
@@ -15,7 +9,7 @@ import {
   getWrongTimeFormatMessage
 } from './utils/messages.js'
 import { adminUsers } from './utils/const.js'
-import { Ride } from '../typings/ride'
+import { Ride } from '../typings/ride.js'
 
 let token: string
 let tgBot: Bot
@@ -162,14 +156,10 @@ const handleExistingRide = async (
 
   let success: boolean
 
-  const remainRides = getDifference(
-    groupRides?.rides as Ride[],
-    groupRides?.ridesToRemove as Ride[]
+  const userRideInDirection = groupRides.filter(
+    (ride: Ride) => ride.user.id === user.id && ride.direction === directionField
   )
-
-  const remainRidesObj = ridesToObject(remainRides)
-
-  if (remainRidesObj && remainRidesObj[`${directionField}.${user.id}`] === '') {
+  if (userRideInDirection.length) {
     success = await rideManager.setRideFull(chatId, {
       userId: user.id,
       direction: directionField,

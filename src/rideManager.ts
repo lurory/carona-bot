@@ -3,7 +3,8 @@ import Bot from 'node-telegram-bot-api'
 import { Group, Ride } from '../typings/ride'
 
 import { compareValues } from './utils/format.js'
-import { ridesToArray, ridesToObject } from './utils/bot.js'
+import { ridesToArray, unsetRides } from './utils/bot.js'
+import { getDifference } from './utils/array.js'
 import { Database } from './database.js'
 import { weekdays, emojis } from './utils/const.js'
 import * as format from './utils/format.js'
@@ -67,26 +68,24 @@ export default class RideManager {
     )
   }
 
-  public async cleanRides(chatId: number, now: Date) {
+  public async cleanRides(chatId: number, now: Date): Promise<Ride[]> {
     const docs = await this.db.scrapeGroupRides(chatId)
-    if (docs.length === 0) return
+    if (docs.length === 0) return []
 
     const group = docs[0] as Group
     const rides = ridesToArray(group)
 
     const ridesToRemove = rides.filter((ride: Ride) => ride.time < now)
 
-    const ridesToApply = ridesToObject(ridesToRemove)
-
     this.db.updateGroup(
       chatId,
       {
-        $unset: ridesToApply
+        $unset: unsetRides(ridesToRemove)
       },
       { upsert: false }
     )
 
-    return { rides, ridesToRemove }
+    return getDifference(rides as Ride[], ridesToRemove as Ride[])
   }
 
   public async listRidesAsString(chatId: number): Promise<string> {

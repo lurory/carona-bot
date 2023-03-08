@@ -14,13 +14,12 @@ export const ridesToArray = (group: Group) => {
   }, [])
 }
 
-export const ridesToObject = (rides: Ride[]) => {
+export const unsetRides = (rides: Ride[]) => {
   let ridesObj: { [x: string]: string } = {}
   for (const ride of rides) {
     const key: string = `${ride.direction}.${ride.user.id}`
     ridesObj[key] = ''
   }
-
   return ridesObj
 }
 
