@@ -40,6 +40,8 @@ tgBot.on('text', async (msg) => {
   const { command, params } = parseFieldsFromMessage(msg.text)
   const currentTime = getCurrentTime()
 
+  console.log("current time em bot.ts: ", currentTime.toLocaleDateString())
+
   switch (command) {
     case '/ida':
     case '/volta':

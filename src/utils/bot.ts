@@ -1,3 +1,4 @@
+import { getCurrentTime } from './date.js'
 import { Group, GroupRides, Ride } from '../../typings/ride.js'
 
 export const parseFieldsFromMessage = (message: string) => {
@@ -24,13 +25,16 @@ export const unsetRides = (rides: Ride[]) => {
 }
 
 export const setRideDateAndTime = (now: Date, rideTime: string[], isToday: boolean) => {
-  let rideDateAndTime = new Date()
+  let rideDateAndTime = getCurrentTime()
   rideDateAndTime.setSeconds(0)
   rideDateAndTime.setHours(parseInt(rideTime[1]))
 
+  console.log("now no setRideDateAndTime: ", now.toString())
+  console.log("rideDateAndTime no setRideDateAndTime: ", rideDateAndTime.toString())
+
   rideTime[2] ? rideDateAndTime.setMinutes(parseInt(rideTime[2])) : rideDateAndTime.setMinutes(0)
 
-  console.log(rideTime, now)
+  console.log(rideTime, now.toString())
 
   // If the "today" flag is not present and the ride hour/minute is before
   // the current time.
