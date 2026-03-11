@@ -2,6 +2,10 @@
 
 Bot that was created to manage rides on a Telegram group. It's currently available only in Portuguese.
 
+## Deployment
+
+The project is configured for [Railpack](https://railpack.com/getting-started) (used by Railway). Build and start are defined in `railpack.json` and `Procfile`. Push to your branch or use the GitHub Action to deploy via Railway.
+
 ## Running the bot locally
 
 - Run `yarn install`

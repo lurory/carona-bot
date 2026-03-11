@@ -19,7 +19,7 @@
     "strictFunctionTypes": true,
     "strictPropertyInitialization": true,
     "resolveJsonModule": true,
-    "esModuleInterop": true,
+    "esModuleInterop": true
   },
   "typeAcquisition": {
     "enable": false
