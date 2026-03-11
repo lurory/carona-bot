@@ -2,6 +2,6 @@
   "$schema": "https://schema.railpack.com",
   "provider": "node",
   "deploy": {
-    "startCommand": "node index.js"
+    "startCommand": "node bin/index.js"
   }
 }
