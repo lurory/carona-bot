@@ -20,7 +20,7 @@
     "body-parser": "^1.15.0",
     "dotenv": "^16.0.2",
     "express": "^4.13.4",
-    "mongodb": "^4.9.1",
+    "mongodb": "^7.1.0",
     "node-telegram-bot-api": "^0.59.0"
   },
   "devDependencies": {
