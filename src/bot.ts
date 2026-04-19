@@ -1,15 +1,15 @@
 import Bot from 'node-telegram-bot-api'
 
-import { getRideInfo, parseFieldsFromMessage, setRideDateAndTime } from './utils/bot.js'
+import { Ride } from '../typings/ride.js'
 import RideManager from './rideManager.js'
+import { getRideInfo, parseFieldsFromMessage, setRideDateAndTime } from './utils/bot.js'
+import { adminUsers } from './utils/const.js'
 import { getCurrentTime, sleep, validateTimeFormat } from './utils/date.js'
 import {
   createFullRideMessage,
   getHelpMessage,
   getWrongTimeFormatMessage
 } from './utils/messages.js'
-import { adminUsers } from './utils/const.js'
-import { Ride } from '../typings/ride.js'
 
 let token: string
 let tgBot: Bot
@@ -62,7 +62,7 @@ tgBot.on('text', async (msg) => {
       break
 
     case '/say':
-      await sendAdminMessageToGroup(user, params)
+      await broadcastAdminMessage(user, chatId, params)
       break
 
     default:
@@ -228,10 +228,60 @@ const handleRemoveRide = async (
     })
 }
 
-const sendAdminMessageToGroup = async (user: Bot.User, params: Array<string>) => {
-  if (adminUsers.includes(user.id)) {
-    const groupId = params[1]
-    tgBot.sendMessage(groupId, params.slice(2, params.length).join(' '))
+const broadcastAdminMessage = async (
+  user: Bot.User,
+  adminChatId: number,
+  params: Array<string>
+) => {
+  const safeReplyToAdmin = async (message: string) => {
+    try {
+      await tgBot.sendMessage(adminChatId, message)
+    } catch (e) {
+      console.log(`Broadcast: could not reach admin chat ${adminChatId}:`, e)
+    }
+  }
+
+  try {
+    if (!adminUsers.includes(user.id)) return
+
+    const text = params.join(' ').trim()
+    if (!text) {
+      await safeReplyToAdmin('Digite a mensagem após /say.')
+      return
+    }
+
+    let chatIds: number[]
+    try {
+      chatIds = await rideManager.getAllGroupChatIds()
+    } catch (e) {
+      console.log('Broadcast: failed to load group chat IDs:', e)
+      await safeReplyToAdmin('Não foi possível carregar a lista de grupos.')
+      return
+    }
+
+    if (chatIds.length === 0) {
+      await safeReplyToAdmin('Nenhum grupo cadastrado no banco ainda.')
+      return
+    }
+
+    let ok = 0
+    let failed = 0
+    for (const gid of chatIds) {
+      try {
+        await tgBot.sendMessage(gid, text)
+        ok++
+      } catch (err) {
+        failed++
+        console.log(`Broadcast failed for chat ${gid}:`, err)
+      }
+    }
+
+    await safeReplyToAdmin(
+      `Enviado para ${ok} grupo(s).` + (failed > 0 ? ` Falhou em ${failed}.` : '')
+    )
+  } catch (unexpected) {
+    console.log('Broadcast: unexpected error:', unexpected)
+    await safeReplyToAdmin('Broadcast encontrou um erro inesperado. Verifique os logs.')
   }
 }
 

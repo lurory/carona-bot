@@ -88,6 +88,10 @@ export default class RideManager {
     return getDifference(rides as Ride[], ridesToRemove as Ride[])
   }
 
+  public async getAllGroupChatIds(): Promise<number[]> {
+    return this.db.listAllGroupChatIds()
+  }
+
   public async listRidesAsString(chatId: number): Promise<string> {
     let result = await this.db.scrapeGroupRides(chatId)
 
