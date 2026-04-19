@@ -1,28 +1,32 @@
-name: Deploy to Railway
+# Runs on every push to these branches so Railway can use "Wait for CI" (see Railway service settings).
+# Deploys are triggered by Railway’s GitHub integration, not by this workflow.
+name: CI
 
 on:
   push:
-    tags-ignore:
-      - "v[0-9]+.[0-9]+.[0-9]+-**"
+    branches:
+      - main
+      - staging
 
 jobs:
-  deploy:
+  ci:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
-      - name: Install packages
-        run: yarn install --frozen-lockfile
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build
+        run: npm run build
 
       - name: Run tests
-        run: yarn test
-
-      - name: Install Railway
-        run: npm i -g @railway/cli
-
-      - name: Deploy
-        run: railway up
-        env:
-          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+        run: npm test
