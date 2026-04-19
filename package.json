@@ -19,16 +19,16 @@
   "dependencies": {
     "body-parser": "^1.15.0",
     "dotenv": "^16.0.2",
-    "express": "^4.13.4",
-    "mongodb": "^4.9.1",
-    "node-telegram-bot-api": "^0.59.0"
+    "express": "^5.2.1",
+    "mongodb": "^7.1.0",
+    "node-telegram-bot-api": "^0.67.0"
   },
   "devDependencies": {
     "@types/co-body": "^0.0.3",
-    "@types/express": "^4.17.14",
-    "@types/jest": "^24.0.18",
+    "@types/express": "^5.0.6",
+    "@types/jest": "^30.0.0",
     "@types/node": "^12.0.0",
-    "@types/node-telegram-bot-api": "^0.57.1",
+    "@types/node-telegram-bot-api": "^0.64.14",
     "ts-node": "^10.9.1",
     "typescript": "^4.7.2"
   }

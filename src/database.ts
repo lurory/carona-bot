@@ -32,6 +32,12 @@ export class Database {
   scrapeGroupRides = (chatId: number): Promise<Group[]> =>
     this._collection?.find({ chatId: chatId }).toArray() as Promise<unknown> as Promise<Group[]>
 
+  listAllGroupChatIds = async (): Promise<number[]> => {
+    if (!this._collection) return []
+    const ids = await this._collection.distinct('chatId', {})
+    return ids.filter((id): id is number => typeof id === 'number')
+  }
+
   getRide = async (filter: Filter<Document>): Promise<unknown[]> => {
     const document = await this._collection?.find(filter).toArray()
 
