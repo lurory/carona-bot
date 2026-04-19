@@ -1,7 +1,7 @@
 export interface Ride {
   user: User
   time: Date
-  description: String
+  description: string
   direction: string
   full: number
 }

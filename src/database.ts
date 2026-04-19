@@ -1,6 +1,6 @@
-import { MongoClient, Collection, Db, InsertOneResult, Filter, Document } from 'mongodb'
-import { MONGO_URL, MONGO_COLLECTION_NAME } from './utils/const.js'
+import { Collection, Db, Document, Filter, InsertOneResult, MongoClient } from 'mongodb'
 import { Group } from '../typings/ride.js'
+import { MONGO_COLLECTION_NAME, MONGO_URL } from './utils/const.js'
 
 export class Database {
   _client: MongoClient
@@ -26,7 +26,7 @@ export class Database {
   disconnect = () =>
     this._client.close().then(
       () => console.log('Closed connection with MongoDB'),
-      (reason: any) => console.log(`Close connection was unsuccessfull. Reason: ${reason}`)
+      (reason: unknown) => console.log(`Close connection was unsuccessful. Reason: ${reason}`)
     )
 
   scrapeGroupRides = (chatId: number): Promise<Group[]> =>
@@ -58,11 +58,11 @@ export class Database {
       upsert: boolean
     }
   ): Promise<boolean> => {
-    let wasMofidied = false
+    let wasModified = false
     let result = await this._collection?.updateOne({ chatId: chatId }, mutation, options)
-    wasMofidied = (result?.modifiedCount as number) > 0
+    wasModified = (result?.modifiedCount as number) > 0
     console.log(result?.modifiedCount + ' element(s) modified.')
 
-    return wasMofidied
+    return wasModified
   }
 }

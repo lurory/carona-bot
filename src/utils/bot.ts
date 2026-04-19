@@ -45,17 +45,17 @@ export const getRideInfo = (params: string[]) => {
   if (params[0].trim() === 'hoje') {
     isToday = true
     time = params[1]
-    description = params.slice(2, params.length).join(' ')
+    description = params.slice(2).join(' ')
   } else {
     time = params[0]
-    description = params.slice(1, params.length).join(' ')
+    description = params.slice(1).join(' ')
   }
 
   return [isToday, time, description] as const
 }
 
 const getPureCommand = (command: string) => {
-  if (command.indexOf('@carona_v2_bot') > -1) {
+  if (command.includes('@carona_v2_bot')) {
     return command.split('@')[0].toLowerCase()
   }
   return command.toLowerCase()
