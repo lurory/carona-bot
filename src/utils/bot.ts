@@ -1,4 +1,5 @@
 import { Group, GroupRides, Ride } from '../../typings/ride.js'
+import { addCalendarDays, brasiliaLocalToUtc, getZonedParts } from './date.js'
 
 export const parseFieldsFromMessage = (message: string) => {
   const [command, ...params] = message.split(' ')
@@ -24,17 +25,19 @@ export const unsetRides = (rides: Ride[]) => {
 }
 
 export const setRideDateAndTime = (now: Date, rideTime: string[], isToday: boolean) => {
-  let rideDateAndTime = new Date()
-  rideDateAndTime.setSeconds(0)
-  rideDateAndTime.setHours(parseInt(rideTime[1]))
+  const { year, month, day } = getZonedParts(now)
+  const hour = parseInt(rideTime[1], 10)
+  const minute = rideTime[2] ? parseInt(rideTime[2], 10) : 0
 
-  rideTime[2] ? rideDateAndTime.setMinutes(parseInt(rideTime[2])) : rideDateAndTime.setMinutes(0)
+  let y = year
+  let mo = month
+  let d = day
 
-  // If the "today" flag is not present and the ride hour/minute is before
-  // the current time.
-  if (!isToday && rideDateAndTime < now) rideDateAndTime.setDate(rideDateAndTime.getDate() + 1)
+  if (!isToday && brasiliaLocalToUtc(y, mo, d, hour, minute).getTime() < now.getTime()) {
+    ;[y, mo, d] = addCalendarDays(y, mo, d, 1)
+  }
 
-  return rideDateAndTime
+  return brasiliaLocalToUtc(y, mo, d, hour, minute)
 }
 
 export const getRideInfo = (params: string[]) => {
