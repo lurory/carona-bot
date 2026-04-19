@@ -2,12 +2,18 @@ import Bot from 'node-telegram-bot-api'
 
 import { Group, Ride } from '../typings/ride'
 
-import { compareValues } from './utils/format.js'
-import { ridesToArray, unsetRides } from './utils/bot.js'
-import { getDifference } from './utils/array.js'
 import { Database } from './database.js'
-import { weekdays, emojis } from './utils/const.js'
+import { getDifference } from './utils/array.js'
+import { ridesToArray, unsetRides } from './utils/bot.js'
+import { emojis, weekdays } from './utils/const.js'
+import {
+  USER_TIME_ZONE,
+  getWeekdayIndexInZone,
+  getZonedParts,
+  zonedDateSortKey
+} from './utils/date.js'
 import * as format from './utils/format.js'
+import { compareValues } from './utils/format.js'
 import { getUserLink } from './utils/messages.js'
 
 export default class RideManager {
@@ -101,11 +107,12 @@ export default class RideManager {
     let rides = ridesToArray(group)
 
     //It sorts by day/month, then direction, then time
+    const tz = USER_TIME_ZONE
     rides.sort((a, b) => {
       return (
         compareValues(
-          new Date(a.time).setHours(0, 0, 0, 0),
-          new Date(b.time).setHours(0, 0, 0, 0)
+          zonedDateSortKey(new Date(a.time), tz),
+          zonedDateSortKey(new Date(b.time), tz)
         ) ||
         compareValues(a.direction, b.direction) ||
         compareValues(new Date(a.time), new Date(b.time))
@@ -114,7 +121,6 @@ export default class RideManager {
 
     // Auxiliary variables
     let message = ''
-    let date, hours, minutes, day, month, weekday
     let previousDirection: string, previousDate: string
     let rideInfo
     let changedDate = false
@@ -122,30 +128,28 @@ export default class RideManager {
     // Assemble the message while iterating over the
     // rides array
     rides.forEach((ride) => {
-      date = new Date(ride.time)
-      hours = date.getHours()
-      minutes = date.getMinutes()
-      day = date.getDate()
-      month = date.getMonth() + 1
-      weekday = weekdays.pt_br[date.getDay()]
+      const when = new Date(ride.time)
+      const z = getZonedParts(when, USER_TIME_ZONE)
+      const weekdayIdx = getWeekdayIndexInZone(when, USER_TIME_ZONE)
 
       // Avoid problems when accessing the user
       if (!ride.user) return
 
       // Check if day/month changed to print a new line
-      if (!previousDate || previousDate !== date.toDateString()) {
+      const dateLineKey = `${z.year}-${z.month}-${z.day}`
+      if (!previousDate || previousDate !== dateLineKey) {
         changedDate = true
         if (previousDate) message += '\n'
         message +=
-          format.getSpecialDayEmoji(day, month) +
+          format.getSpecialDayEmoji(z.day, z.month) +
           '<b>' +
-          format.addZeroPadding(day) +
+          format.addZeroPadding(z.day) +
           '/' +
-          format.addZeroPadding(month) +
+          format.addZeroPadding(z.month) +
           ' - ' +
-          weekday +
+          weekdays.pt_br[weekdayIdx] +
           '</b> ' +
-          emojis[date.getDay()] +
+          emojis[weekdayIdx] +
           '\n'
       }
 
@@ -158,9 +162,9 @@ export default class RideManager {
       // Ride info (time and description)
       rideInfo =
         ' - ' +
-        format.addZeroPadding(hours) +
+        format.addZeroPadding(z.hour) +
         ':' +
-        format.addZeroPadding(minutes) +
+        format.addZeroPadding(z.minute) +
         ' - ' +
         ride.description
 
@@ -180,7 +184,7 @@ export default class RideManager {
       }
 
       previousDirection = ride.direction
-      previousDate = date.toDateString()
+      previousDate = dateLineKey
       changedDate = false
     })
 

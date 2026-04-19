@@ -4,7 +4,7 @@ import { Ride } from '../typings/ride.js'
 import RideManager from './rideManager.js'
 import { getRideInfo, parseFieldsFromMessage, setRideDateAndTime } from './utils/bot.js'
 import { adminUsers } from './utils/const.js'
-import { getCurrentTime, sleep, validateTimeFormat } from './utils/date.js'
+import { sleep, validateTimeFormat } from './utils/date.js'
 import {
   createFullRideMessage,
   getHelpMessage,
@@ -34,12 +34,10 @@ tgBot.on('text', async (msg) => {
   const user = msg.from as Bot.User
   const messageId = msg.message_id
   const { command, params } = parseFieldsFromMessage(msg.text)
-  const currentTime = getCurrentTime()
-
   switch (command) {
     case '/ida':
     case '/volta':
-      await handleNewRide(command, chatId, messageId, user, currentTime, params)
+      await handleNewRide(command, chatId, messageId, user, new Date(), params)
       break
 
     case '/lotou':
@@ -192,7 +190,7 @@ const listRides = async (chatId: number) =>
       : tgBot.sendMessage(chatId, 'Nenhuma carona cadastrada até o momento.')
   })
 
-const cleanRides = async (chatId: number) => rideManager.cleanRides(chatId, getCurrentTime())
+const cleanRides = async (chatId: number) => rideManager.cleanRides(chatId, new Date())
 
 const handleRemoveRide = async (
   command: string,
