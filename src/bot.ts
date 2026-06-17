@@ -28,7 +28,7 @@ console.log('Bot server started in the ' + process.env.NODE_ENV + ' mode')
 let rideManager = new RideManager()
 
 tgBot.on('text', async (msg) => {
-  if (!msg.text || msg.text[0] != '/') return
+  if (!msg.text || msg.text[0] !== '/') return
 
   const chatId = msg.chat.id
   const user = msg.from as Bot.User
@@ -144,7 +144,7 @@ const handleExistingRide = async (
   user: Bot.User,
   options: Array<string>
 ) => {
-  if (options.length < 1 || (options[0] != 'ida' && options[0] != 'volta')) {
+  if (options.length < 1 || (options[0] !== 'ida' && options[0] !== 'volta')) {
     tgBot.sendMessage(chatId, command + ' ida/volta')
     return
   }
@@ -183,12 +183,14 @@ const handleExistingRide = async (
   }
 }
 
-const listRides = async (chatId: number) =>
-  await rideManager.listRidesAsString(chatId).then((msg: string) => {
-    msg != ''
-      ? tgBot.sendMessage(chatId, msg, { parse_mode: 'HTML' })
-      : tgBot.sendMessage(chatId, 'Nenhuma carona cadastrada até o momento.')
-  })
+const listRides = async (chatId: number) => {
+  const msg = await rideManager.listRidesAsString(chatId)
+  if (msg !== '') {
+    tgBot.sendMessage(chatId, msg, { parse_mode: 'HTML' })
+  } else {
+    tgBot.sendMessage(chatId, 'Nenhuma carona cadastrada até o momento.')
+  }
+}
 
 const cleanRides = async (chatId: number) => rideManager.cleanRides(chatId, new Date())
 
@@ -199,7 +201,7 @@ const handleRemoveRide = async (
   user: Bot.User,
   options: Array<string>
 ) => {
-  if (options.length < 1 || (options[0] != 'ida' && options[0] != 'volta')) {
+  if (options.length < 1 || (options[0] !== 'ida' && options[0] !== 'volta')) {
     tgBot.sendMessage(chatId, command + ' ida/volta')
     return
   }

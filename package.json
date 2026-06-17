@@ -23,6 +23,10 @@
     "mongodb": "^7.1.0",
     "node-telegram-bot-api": "^0.67.0"
   },
+  "overrides": {
+    "request": "npm:@cypress/request@3.0.10",
+    "tough-cookie": "5.1.2"
+  },
   "devDependencies": {
     "@types/co-body": "^0.0.3",
     "@types/express": "^5.0.6",

@@ -26,7 +26,7 @@ export default class RideManager {
 
   public async addRide(
     chatId: number,
-    rideInfo: { user: Bot.User; time: Date; description: String; direction: string }
+    rideInfo: { user: Bot.User; time: Date; description: string; direction: string }
   ): Promise<boolean> {
     const ride = {
       full: 0,
@@ -83,7 +83,8 @@ export default class RideManager {
 
     const ridesToRemove = rides.filter((ride: Ride) => ride.time < now)
 
-    this.db.updateGroup(
+    // Fire-and-forget: listing uses in-memory `rides` already filtered below.
+    void this.db.updateGroup(
       chatId,
       {
         $unset: unsetRides(ridesToRemove)
